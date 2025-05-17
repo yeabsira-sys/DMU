@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { mongoose } from "../config/db.mjs";
 
 const announcementSchema = new mongoose.Schema({
   title: String,

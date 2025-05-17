@@ -1,0 +1,90 @@
+components:
+  schemas: 
+  # create user Schema
+  createUser: 
+    type: object
+    properties:
+      name:
+        type: String
+        example: "abebe abebe"
+      phone: 
+        type: String
+        example: "+251912121212 or 0912121212 or 912121212"
+      email: 
+       type: String
+       example: "abebeabebe@gmail.com"
+      role: 
+        type: String
+        enum: [admin, cda, student]
+        example: "admin, cda, student nb use enum"
+    # News Schema
+    News:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        description:
+          type: string
+        author:
+          type: string
+        isHidden:
+          type: boolean
+        socialMediaPosted:
+          type: boolean
+
+    # Search News Schema
+    NewsSearchResponse:
+      type: object
+      properties:
+        title:
+          type: String
+        description:
+          type: String
+        author: 
+          type: string
+        images: 
+          type: object
+
+    # LoginRequest Schema
+    LoginRequest:
+      type: object
+      required: [identifier, password]
+      properties:
+        identifier:
+          type: string
+          example: "akrem@example.com"
+        password:
+          type: string
+          example: "securePassword123"
+
+    # LoginResponse Schema
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+    # ErrorResponse Schema
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Something went wrong"
+
+    # Image Get Response
+    ImageGetResponse:
+      type: object
+      properties: 
+        filename: 
+          type: string
+        id: 
+          type: string
+        metadata: 
+          type: object
+
+

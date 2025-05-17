@@ -4,6 +4,10 @@ import routes from './src/routes/index.mjs'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 import { gridFSReady } from './src/config/fileStream.mjs';
+import swaggerSpec from './src/config/swagger.mjs';
+import swaggerUi from 'swagger-ui-express'
+import cors from 'cors'
+
 dotenv.config()
 
 const app = express();
@@ -14,9 +18,11 @@ async function startServer(){
   try {
     
     await gridFSReady
+    app.use(cors())
     app.use(express.json());
     app.use(cookieParser())
     app.use('/', routes)
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
     connectDB();
     process.on('unhandledRejection', (reason, promise) => {
       console.error('Unhandled rejection:', reason);

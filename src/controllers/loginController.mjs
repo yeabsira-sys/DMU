@@ -3,9 +3,7 @@ import  {User} from '../models/User.mjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import queueEmail from "../queues/emailQueue.mjs";
-import { enqueueAuditLog } from "../queues/auditLogQueue.mjs";
-import extractMeta from "../utils/extractMetadata.mjs";
-import {auditLogSchema} from '../validations/auditLogsSchema.mjs'
+import {findUserByIdentifier} from '../services/getUser.mjs'
 
 dotenv.config()
 
@@ -13,14 +11,7 @@ export const loginUser = async (req,res)=> {
   try {
     
     const {identifier, password } = req.body;
-    console.log(req.user)
-    const user = await User.findOne({
-            $or: [
-              {email: identifier},
-              {userName: identifier},
-              {phone: identifier}
-            ]
-          })
+    const user = await findUserByIdentifier(identifier)
           
           if (!user) return res.status(401).json({"message": "please enter correct username | email or phone number"})
             if (user.status == 'suspended') return res.status(403).json({"message": `${user.userName} has been suspended`})
@@ -83,12 +74,12 @@ export const loginUser = async (req,res)=> {
               }
               const accessToken = jwt.sign(payload,
                 process.env.JWT_ACCESS_TOKEN,
-                { expiresIn: process.env.JWT_EXPIRES_IN || '60m' }
+                { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
               );
     // write refresh token to the user record so it can be used to refresh the access token
     const refreshToken = jwt.sign(payload,
       process.env.JWT_REFRESH_TOKEN,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '2d' }
     );
     
     const Now = new Date

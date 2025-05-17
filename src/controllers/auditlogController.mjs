@@ -28,6 +28,8 @@ export const getAuditLogs = async (req, res) => {
       if (from) query.timestamp.$gte = new Date(from);
       if (to) query.timestamp.$lte = new Date(to);
     }
+
+    // audit SEARCH and get all search
     const isValid = auditSearchSchema.validate(query)
     if(!isValid) return res.status(400).json({"message": "incorrect query parameter / filters"})
     const skip = (page - 1) * limit;

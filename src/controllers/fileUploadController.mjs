@@ -18,7 +18,7 @@ export const uploadFile = async (req, res, next) => {
         metadata: {
           uploadedBy: req.user?.userName || 'anonymose',
           caption: captionsArray[i]? captionsArray[i] : captionsArray[0],
-          titel: title || '',
+          title: title || '',
           content: content || ''
         },
         contentType: file.mimetype,

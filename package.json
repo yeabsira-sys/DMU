@@ -27,6 +27,8 @@
     "mongoose": "^8.14.2",
     "multer": "^1.4.4",
     "nodemailer": "^7.0.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "vhost": "^3.0.2"
   },
   "type": "module"

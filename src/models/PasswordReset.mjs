@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import { mongoose } from "../config/db.mjs";
 
 const passwordResetSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

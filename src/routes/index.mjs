@@ -1,5 +1,3 @@
-// Refactored version using native MongoDB GridFSBucket and avoiding deprecated gridfs-stream
-
 import express from "express";
 import vhost from "vhost";
 import adminApp from '../apps/adminApp.mjs';
@@ -17,7 +15,7 @@ import { requireJsonBody } from "../middlewares/checkBodyForjson.mjs";
 const router = express.Router();
 
 // vhost routes
-router.use(requireJsonBody)
+// router.use(requireJsonBody)
 router.use(vhost('admin.localhost', adminApp));
 router.use(vhost('cda.localhost', cdaApp));
 router.use(vhost('studentportal.localhost', stdPortalApp));

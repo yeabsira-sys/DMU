@@ -4,7 +4,7 @@ export const streamImageById = async (req, res) => {
   try {
     const _id = req.params._id
     console.log(_id, " image id")
-    const filesCollection = conn.db.collection('uploads.files');
+    const filesCollection = conn.db.collection('images.files');
 
     const file = await filesCollection.findOne({ _id: new ObjectId(_id) });
     if (!file) {

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { mongoose } from "../config/db.mjs";
 
 const socialMediaQueueSchema = new mongoose.Schema({
   postType: { type: String, enum: ['news', 'event', 'announcement'] },

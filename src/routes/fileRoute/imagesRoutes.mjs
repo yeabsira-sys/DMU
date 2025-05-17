@@ -1,6 +1,5 @@
 import express from 'express'
 import { upload } from '../../config/fileStream.mjs'
-import { Cipher } from 'crypto';
 import { uploadFile } from '../../controllers/fileUploadController.mjs';
 import { imageValidation } from '../../validations/imageValidation.mjs';
 import { validateImageData } from '../../middlewares/validateImageData.mjs';

@@ -1,19 +1,9 @@
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 dotenv.config()
+
 const MONGO_URI = process.env.MONGO_URI;
 
-// const connectDB = async () => {
-// try {
-//     const conn = await mongoose.createConnection(MONGO_URI, {
-//     serverSelectionTimeoutMS: 5000,
-//     maxPoolSize: 10
-// })
-// .then(() => {console.log('data base connected')})
-// }catch( err ) {
-//     console.error('connection error', err)
-//     process.exit(1)
-// }}
 const connectDB = async () => {
     try {
         
@@ -24,5 +14,5 @@ const connectDB = async () => {
         console.error('server down ', error)
     }
   };
-
+export { mongoose}
 export default connectDB;

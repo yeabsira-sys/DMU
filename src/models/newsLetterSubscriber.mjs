@@ -1,4 +1,4 @@
-import mongoose from 'monggose'
+import { mongoose } from "../config/db.mjs";
 
 const newsletterSubscriberSchema = new mongoose.Schema({
   email: { type: String, unique: true },

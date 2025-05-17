@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { mongoose } from "../config/db.mjs";
 
 const integrationSchema = new mongoose.Schema({
   service: { type: String, enum: ['google', 'sims'] },
