@@ -1,0 +1,6 @@
+the server requires redis in memory storage engene to run
+you have to go to your host.txt file and map admin.localhost 
+cda.localhost, and stdportal.localhost to your local host ip address 
+and run the email worker and auditlog worker functions manually from
+the service directory in the src folder, 
+this would work for now i am working hard to wrap up and work on swagger api documentation
