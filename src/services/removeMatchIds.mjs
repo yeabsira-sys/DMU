@@ -11,6 +11,7 @@ export const removeMatchIds = async (idsToRemove, oldImage, newImage) => {
 console.log(idsToRemove, ': :', oldImage," : :", newImage)
   const filtered = oldImage.filter(img => !idsToRemove.includes(img.id));
   console.log(filtered, 'filtered')
-return 1
-  // return [...filtered, ...newImage]
+  console.log(oldImage, 'old')
+  console.log(newImage, 'new')
+  return [...filtered, ...newImage]
 };

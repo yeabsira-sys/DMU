@@ -4,7 +4,6 @@ import fs from 'fs/promises'
 
 // upload files/ images
 export const uploadFile = async (req, res, next) => {
-
   try {
     const { title, content, captions, imageFor } = req.body;
     const captionsArray = captions? captions.split(',') : '';

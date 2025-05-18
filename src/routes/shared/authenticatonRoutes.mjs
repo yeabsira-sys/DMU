@@ -13,55 +13,21 @@ const router = express.Router()
  * @swagger
  * /auth/login:
  *   post:
- *     summary: Authenticate a user and return a JWT token
  *     tags:
- *       - Auth
+ *       - Authentication
+ *     summary: User login with email, phone number, or username
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               identifier:
- *                 type: string
- *                 example: user@example.com
- *               password:
- *                 type: string
- *                 example: secret123
+ *             $ref: '#/components/schemas/AuthRequest'
  *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6...
- *                 user:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       example: 609e12a456789abcdeff4321
- *                     email:
- *                       type: string
- *                       example: user@example.com
- *       401:
- *         description: Unauthorized - invalid email or password
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Invalid credentials
+ *       '200':
+ *         description: Successfully authenticated
+ *       '400':
+ *         description: Invalid input or authentication failed
  */
-
-
 router.post('/login', auditLogger('system login'), validate(authSchema), actorLogin, loginUser )
 
 // logout 

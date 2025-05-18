@@ -38,7 +38,7 @@ export const editNewsValidationSchema = Joi.object({
       'array.includes': '{{#label}} contains invalid platform'
     }),
     imageNames: Joi.array().items(Joi.object({
-      _id: Joi.string().required(),
+      id: Joi.string().required(),
       name: Joi.string().required(),
     })),
     imageIds: Joi.array().items(Joi.string().required()),

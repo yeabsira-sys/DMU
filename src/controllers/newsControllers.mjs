@@ -1,13 +1,23 @@
 import { News } from "../models/News.mjs";
 import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+import { fileExists } from "../utils/isFileExist.mjs";
 import { deleteFiles } from "../services/deleteFileService.mjs";
 import { findUserByIdentifier } from "../services/getUser.mjs";
 import mongoose from "mongoose";
 import { changeMetadata } from "../services/changeFileMetaData.mjs";
 import { ObjectId } from "mongodb";
 import { removeMatchIds } from "../services/removeMatchIds.mjs";
+import { verifyAdmin } from "../middlewares/checkForAdmin.mjs";
+import { verifyCDA } from "../middlewares/verifyCDA.mjs";
+import { verifyAdminOrCDA } from "../middlewares/verifyForAdminOrCDA.mjs";
 
-export const newsPostController = async (req, res) => {
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+export const newsPostController = async (req, res, next) => {
+  // await verifyCDA(req, res, next);
+  if(!req.user.role == 'cda') return res.status(403).json({message: 'forbidden'})
   try {
     let newsData = (({
       title,
@@ -31,6 +41,7 @@ export const newsPostController = async (req, res) => {
 
     const imageData = await fs.readFile("imagefile.json", "utf-8");
     const images = await JSON.parse(imageData);
+    await fs.unlink("imagefile.json")
     console.log(images);
     const postedBy = req.user.id || "";
     newsData = {
@@ -38,24 +49,22 @@ export const newsPostController = async (req, res) => {
       images: images,
       postedBy,
     };
-    const news = await News.create(newsData);
-    if (!news) {
-      // once the news could not be updated delete the images that uploads before
-      let imageIds = [];
-      images.map((image) => {
-        imageIds.push(image.id);
-      });
-      await deleteFiles(imageIds);
-      return res.status(400).json({
-        message: "news could not be upload",
-      });
-    }
-    res.status(201).json({ payload: news });
+    try {
+  const news = await News.create(newsData);
+  return res.status(201).json({ payload: news });
+} catch (error) {
+  const imageIds = images.map((image) => image.id);
+  await deleteFiles(imageIds);
+
+  console.error("Failed to create news:", error.message);
+  return res.status(400).json({
+    message: "News could not be uploaded",
+    error: error.message,
+  });
+}
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ message: "news could not be upload, enternal server error" });
+    return res.status(500).json({ message: "news could not be upload, enternal server error" });
   }
 };
 
@@ -109,6 +118,7 @@ export const filterNews = async (req, res) => {
 };
 
 export const filterNewsAdmin = async (req, res) => {
+  verifyAdminOrCDA(req, res, next)
   try {
     const {
       title,
@@ -182,11 +192,9 @@ export const filterNewsAdmin = async (req, res) => {
       .limit(parseInt(limit));
 
     if (news.length == 0)
-      return res
-        .status(404)
-        .json({
-          message: `no news to found woth filter ${JSON.stringify(filter)}`,
-        });
+      return res.status(404).json({
+        message: `no news to found woth filter ${JSON.stringify(filter)}`,
+      });
     const totalNews = await News.countDocuments({});
     const length = news.length;
     res.status(200).json({
@@ -225,6 +233,7 @@ export const getNewsById = async (req, res) => {
 
 // for admins
 export const getNewsByIdAdmin = async (req, res) => {
+  verifyAdminOrCDA(req, res, next)
   try {
     const { id } = req.params;
     const news = await News.findOne({ _id: id });
@@ -238,7 +247,9 @@ export const getNewsByIdAdmin = async (req, res) => {
 
 // UPDATE news
 export const updateNews = async (req, res) => {
-  if(!req.body) return res.status(400).json({message: 'update data are required'})
+  verifyAdminOrCDA(req, res, next)
+  if (!req.body)
+    return res.status(400).json({ message: "update data are required" });
   try {
     const { _id } = req.params;
     const {
@@ -264,83 +275,88 @@ export const updateNews = async (req, res) => {
       strong,
       adminLoked,
       cdaLoked,
-    } 
-    
+    };
+
     updatedData.editedAt = new Date();
     updatedData.editedBy = req.user.id || "";
     const { imageNames, imageChanged, formerImages, imageIds } = req.body;
-    console.log(updatedData, )
-    /**
-     * if image name/s are sent that means the image metadata is changing
-     * if image changed is true that means the former images are deleted and the new ones are stored so the new image ids are has to be fetched from the imagefile.json
-     *
-     * check for imageNames
-     *    true update the new image names easy
-     *    .then update the news content if there is any change
-     * false check for image changed
-     *      true delete the former image
-     *      .then update the news content including the images object in it
-     */
+    console.log(updatedData);
     if (imageChanged) {
-      // formerImages.map((image) => {
-      //   imageIds.push(image.id);
-      // });
-      
-      const imageData = await fs.readFile("imagefile.json", "utf-8");
-      const images = await JSON.parse(imageData);
-      console.log(images);
-      const newImage = await removeMatchIds(imageIds, formerImages, images)
-      console.log(newImage)
+      const imageFilePath = path.join(__dirname, "imagefile.json")
+        let images
+      if( await fileExists(imageFilePath)){
+        images = JSON.parse(imageData);
+        await fs.unlink(imageFilePath);
+      }
+      else{
+        images = []
+      }
+           const newImage = await removeMatchIds(imageIds, formerImages, images);
+      // console.log(newImage)
       updatedData = {
         ...updatedData,
-         newImage,
-      }
-      // THE NEWS image object should not be detached by overide with the new image meta data and uri
-
-      //check iteratively for a match for deleted image with the existed one 
-      // retain the ones don't match by id
-
+        images: newImage,
+      };
 
       const updatedNews = await News.findByIdAndUpdate(
-        {_id: new ObjectId(_id)}, 
+        { _id: new ObjectId(_id) },
         {
-          $set: updatedData
-        }, { new: true })
+          $set: updatedData,
+        },
+        { new: true }
+      );
 
-        if(!updatedNews) {
-          return res.status(400).json({message: 'news could not be updated'})
-        }
-        await deleteFiles(formerImages);
-        return res.status(200).json({
-          payload: updatedNews
-        })
-    } 
-    else if (imageNames) {
+      if (!updatedNews) {
+        return res.status(400).json({ message: "news could not be updated" });
+      }
+      await deleteFiles(imageIds);
+      return res.status(200).json({
+        payload: updatedNews,
+      });
+ 
+      // console.log(images);
+     
+    } else if (imageNames) {
       const changes = await changeMetadata(imageNames);
-      if(changes.acknowledged == true){
+      console.log(changes)
+      if (changes.acknowledged == true) {
+        for (let i = 0; i < imageNames.length; i++) {
+          for (let j = 0; j < formerImages.length; j++) {
+            if (imageNames[i].id == formerImages[j].id) {
+              formerImages[j].name = imageNames[i].name
+            }
+          }
+        }
+        console.log(formerImages, 'former image')
+          updatedData.images = formerImages
         const updatedNews = await News.findByIdAndUpdate(
           { _id: new ObjectId(_id) },
           {
-            $set: updatedData
+            $set: updatedData,
           },
           { new: true }
         );
-        if(!updatedNews) return res.status(400).json({message: 'news could not be updated!'})
-          res.status(200).json({payload: updatedNews})
+        if (!updatedNews)
+          return res
+            .status(400)
+            .json({ message: "news could not be updated!" });
+        res.status(200).json({ payload: updatedNews });
       }
     } else {
-          const updatedNews = await News.findByIdAndUpdate(
-        {_id: new ObjectId(_id)}, 
+      const updatedNews = await News.findByIdAndUpdate(
+        { _id: new ObjectId(_id) },
         {
-          $set: updatedData
-        }, { new: true })
+          $set: updatedData,
+        },
+        { new: true }
+      );
 
-        if(!updatedNews) {
-          return res.status(400).json({message: 'news could not be updated'})
-        }
-        res.status(200).json({
-          payload: updatedNews
-        })
+      if (!updatedNews) {
+        return res.status(400).json({ message: "news could not be updated" });
+      }
+      res.status(200).json({
+        payload: updatedNews,
+      });
     }
   } catch (err) {
     console.error("Update News Error:", err);
@@ -350,17 +366,37 @@ export const updateNews = async (req, res) => {
 
 // SOFT DELETE news (set isHidden: true)
 export const deleteNews = async (req, res) => {
+  verifyAdminOrCDA(req, res, next)
   try {
-    const { id } = req.params;
-    const deleted = await News.findByIdAndUpdate(
-      id,
-      { isHidden: true },
-      { new: true }
-    );
-    if (!deleted) return res.status(404).json({ error: "News not found" });
-    res
-      .status(200)
-      .json({ message: "News hidden (soft deleted) successfully" });
+    const { _id } = req.params;
+    const news = await News.findOne({_id: new ObjectId(_id)})
+    if(!news) return res.status(404).json({message: `no news to be deleted with id ${_id}`})
+      const images = news.images
+
+    let imagesId = []
+    
+    images.map((image) => {
+      imagesId.push(image.id)
+    })
+      const returnVal = await deleteFiles(imagesId)
+      if(!returnVal) return res.status(400).json({message: 'news cant be deleted'})
+
+        const deleted = await News.findOneAndDelete({_id: new ObjectId(_id)})
+        if(!deleted) return res.status(400).json({message: 'news could not be deleted'})
+          res.sendStatus(200);
+  } catch (err) {
+    console.error("Delete News Error:", err);
+    res.status(500).json({ error: "Failed to delete news" });
+  }
+};
+export const hideNews = async (req, res) => {
+  verifyAdminOrCDA(res, req, next)
+  try {
+    const { _id } = req.params;
+    const news = await News.findOne({_id: new ObjectId(_id)})
+    if(!news) return res.status(404).json({message: `no news to be hidden with id ${_id}`})
+      const hiddenNews = await News.findOneAndUpdate({isHidden: true})
+    if(!hiddenNews) return res.status(400).json({message: `no news to be hidden with id ${_id}`})
   } catch (err) {
     console.error("Delete News Error:", err);
     res.status(500).json({ error: "Failed to delete news" });

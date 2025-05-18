@@ -1,4 +1,9 @@
 import swaggerJSDoc from "swagger-jsdoc";
+import fs from 'fs'
+import yaml from 'js-yaml'
+
+const componentsDoc = yaml.load(fs.readFileSync('./docs/swagger.yaml', 'utf-8'))
+const newsComponents = yaml.load(fs.readFileSync('./docs/newsSchema.yaml', 'utf-8'))
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -13,6 +18,10 @@ const options = {
             { url: 'http://stdportal.localhost:3000', description: 'students subdomain'},
             { url: 'http://localhost:3000', description: ' main domain'},
         ],
+        components: {
+            ...componentsDoc.components, 
+            ...newsComponents.components
+        }
     },
     apis: ['./src/routes/**/*.mjs'],
 };

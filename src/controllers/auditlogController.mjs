@@ -33,7 +33,7 @@ export const getAuditLogs = async (req, res) => {
     const isValid = auditSearchSchema.validate(query)
     if(!isValid) return res.status(400).json({"message": "incorrect query parameter / filters"})
     const skip = (page - 1) * limit;
-
+    
     const logs = await AuditLogs.find(query)
       .sort({ timestamp: -1 })
       .skip(skip)

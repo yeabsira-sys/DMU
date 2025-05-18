@@ -1,90 +1,206 @@
 components:
-  schemas: 
-  # create user Schema
-  createUser: 
-    type: object
-    properties:
-      name:
-        type: String
-        example: "abebe abebe"
-      phone: 
-        type: String
-        example: "+251912121212 or 0912121212 or 912121212"
-      email: 
-       type: String
-       example: "abebeabebe@gmail.com"
-      role: 
-        type: String
-        enum: [admin, cda, student]
-        example: "admin, cda, student nb use enum"
-    # News Schema
-    News:
-      type: object
-      properties:
-        title:
-          type: string
-        content:
-          type: string
-        description:
-          type: string
-        author:
-          type: string
-        isHidden:
-          type: boolean
-        socialMediaPosted:
-          type: boolean
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  security:
+  - bearerAuth: []
 
-    # Search News Schema
-    NewsSearchResponse:
+  schemas:
+    deleteUser:
       type: object
+      required:
+        - identifier
+        - password
       properties:
-        title:
-          type: String
-        description:
-          type: String
-        author: 
+        identifier:
+          oneOf:
+            - type: string
+              format: email
+            - type: string
+              pattern: '^(\+251|0)?9\d{8}$'
+            - type: string
+              minLength: 3
+              maxLength: 30
+          description: User identifier (email, phone number, or username)
+          example: "user@example.com"
+        password:
           type: string
-        images: 
-          type: object
+          minLength: 8
+          description: Password for confirmation
+          example: "StrongP@ssword123"
 
-    # LoginRequest Schema
-    LoginRequest:
+    getUserByUserName:
       type: object
-      required: [identifier, password]
+      required:
+        - userName
+      properties:
+        userName:
+          type: string
+          minLength: 3
+          maxLength: 30
+          description: Username with 3 to 30 characters
+          example: "johndoe123"
+    getUserByPhone:
+      type: object
+      required:
+        - phone
+      properties:
+        phone:
+          type: string
+          pattern: '^(\+251|0)?9\d{8}$'
+          description: Ethiopian phone number starting with +251 or 0 followed by 9 digits
+          example: "+251912345678"
+    getUserByEmail:
+     type: object
+     required:
+       - email
+     properties:
+        email:
+        type: string
+        format: email
+        example: "user@example.com"
+        description: User's email address
+
+    getUserByID:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          pattern: '^[a-fA-F0-9]{24}$'
+          description: MongoDB ObjectId (24-character hex string)
+          example: "507f1f77bcf86cd799439011"
+
+    suspendUser:
+      type: object
+      required:
+        - identifier
       properties:
         identifier:
           type: string
-          example: "akrem@example.com"
+          description: User identifier (email, Ethiopian phone number, or username)
+          oneOf:
+            - type: string
+              format: email
+            - type: string
+              pattern: '^(\+251|0)?9\d{8}$'
+            - type: string
+              minLength: 3
+              maxLength: 30
+          example: "johndoe@example.com"
+    updateUser:
+      type: object
+      required:
+        - name
+        - email
+        - phone
+        - role
+        - identifier
+      properties:
+        name:
+          type: string
+          example: "Abebe Kebede"
+        email:
+          type: string
+          format: email
+          example: "abebe@example.com"
+        phone:
+          type: string
+          pattern: '^[0-9]{9,15}$'
+          description: Valid phone number (9 to 15 digits)
+          example: "912345678"
+        role:
+          type: string
+          enum: [student, admin, cda]
+          example: "admin"
+        status:
+          type: string
+          enum: [active, suspended]
+          example: "active"
+        identifier:
+          oneOf:
+            - type: string
+              format: email
+            - type: string
+              pattern: '^(\+251|0)?9\\d{8}$'
+            - type: string
+              minLength: 3
+              maxLength: 30
+          description: "User identifier: email, phone number, or username"
+          example: "abebe@example.com"
+    createUser:
+      type: object
+      required:
+        - name
+        - phone
+        - role
+      properties:
+        name:
+          type: string
+          minLength: 6
+          maxLength: 60
+          example: "Abebe Kebede"
+        email:
+          type: string
+          format: email
+          description: Valid email with at least 2 domain segments
+          example: "abebe@example.com"
+        phone:
+          type: string
+          pattern: '^(\+251|0)?9\\d{8}$'
+          description: Phone number in Ethiopian format (+251 or 0 prefix)
+          example: "+251912345678"
+        role:
+          type: string
+          enum: [student, admin, cda]
+          description: Role of the user
+          example: "student"
+    AuthRequest:
+      type: object
+      required:
+        - identifier
+        - password
+      properties:
+        identifier:
+          oneOf:
+            - type: string
+              format: email
+            - type: string
+              pattern: '^(\+251|0)?9\d{8}$'
+            - type: string
+              minLength: 3
+              maxLength: 30
+          description: "User identifier: email, Ethiopian phone (+251 or 0), or username (3-30 chars)"
+          example: "johndoe@example.com"
         password:
           type: string
-          example: "securePassword123"
-
-    # LoginResponse Schema
-    LoginResponse:
+          minLength: 8
+          description: "Password with minimum 8 characters"
+          example: "mySecureP@ss123"
+    ResetPasswordRequest:
       type: object
+      required:
+        - userName
+        - newPassword
+        - confirmPassword
       properties:
-        token:
+        userName:
           type: string
-        user:
-          $ref: '#/components/schemas/User'
-
-    # ErrorResponse Schema
-    ErrorResponse:
-      type: object
-      properties:
-        message:
+          minLength: 3
+          maxLength: 30
+          example: abebeabebe2313
+        newPassword:
           type: string
-          example: "Something went wrong"
-
-    # Image Get Response
-    ImageGetResponse:
-      type: object
-      properties: 
-        filename: 
+          minLength: 8
+          maxLength: 30
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$'
+          description: Password with at least one uppercase, one lowercase, and one digit
+          example: "StrongPass123"
+        confirmPassword:
           type: string
-        id: 
-          type: string
-        metadata: 
-          type: object
-
-
+          const: "StrongPass123"  # Swagger does not support Joi.ref, so this is illustrative
+          description: Must match the new password
+          example: "StrongPass123"

@@ -8,9 +8,9 @@ export const deleteFiles = async (ids) => {
       const objectId = new ObjectId(id);
       await bucket.delete(new ObjectId(id));
       console.log(`Deleted image with ID: ${ objectId}`);
-      return true
     } catch (error) {
       console.error(`Failed to delete image with ID ${id}:`, error.message);
     }
   }
+  return true
 };

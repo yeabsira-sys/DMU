@@ -1,0 +1,104 @@
+components:
+  schemas:
+    searchNewsQuery:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Filter by news title
+          example: "Science Fair"
+        author:
+          type: string
+          description: Filter by author name
+          example: "John Doe"
+        isHidden:
+          type: boolean
+          description: Filter by visibility status
+          example: false
+        editedBy:
+          type: string
+          description: Filter by the user who edited the news
+          example: "editorUser"
+        postedBy:
+          type: string
+          description: Filter by the user who posted the news
+          example: "posterUser"
+        fromDate:
+          type: string
+          format: date
+          description: Filter news posted after this date
+          example: "2024-01-01"
+        toDate:
+          type: string
+          format: date
+          description: Filter news posted before this date
+          example: "2024-12-31"
+        description:
+          type: string
+          description: Filter by news description
+          example: "Annual event coverage"
+        limit:
+          type: integer
+          description: Number of items per page
+          example: 10
+        page:
+          type: string
+          description: Page number
+          example: "1"
+        adminLoked:
+          type: boolean
+          description: Filter by admin lock status
+          example: true
+        cdaLoked:
+          type: boolean
+          description: Filter by CDA lock status
+          example: false
+        socialMediaPosted:
+          type: array
+          items:
+            type: string
+            enum: [facebook, telegram]
+          description: Filter by platforms where the news was posted
+          example: ["facebook"]
+    createNews:
+      type: object
+      required:
+        - title
+        - content
+        - author
+      properties:
+        title:
+          type: string
+          description: Title of the news
+          example: "University Hosts Annual Science Fair"
+        content:
+          type: string
+          description: Main body of the news article
+          example: "The science fair showcased projects from over 200 students..."
+        description:
+          type: string
+          description: Short description or summary
+          example: "Highlights from the annual science fair"
+        detail:
+          type: string
+          description: Additional detail or extended content
+          example: "Held at the main auditorium with guest speakers from various institutions."
+        author:
+          type: string
+          description: Author of the news
+          example: "John Doe"
+        isHidden:
+          type: boolean
+          description: Whether the news is hidden from public view
+          example: false
+        socialMediaPosted:
+          type: array
+          items:
+            type: string
+            enum: [facebook, telegram]
+          description: Platforms where the news has been shared
+          example: ["facebook", "telegram"]
+        strong:
+          type: boolean
+          description: Whether to prioritize this news item on the homepage
+          example: true

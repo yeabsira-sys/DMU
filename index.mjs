@@ -8,38 +8,45 @@ import swaggerSpec from './src/config/swagger.mjs';
 import swaggerUi from 'swagger-ui-express'
 import cors from 'cors'
 
-dotenv.config()
 
+dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000
 
-async function startServer(){
-
+async function startServer() {
   try {
-    
-    await gridFSReady
-    app.use(cors())
+    await connectDB(); // Connect DB FIRST
+    await gridFSReady; // Then wait for GridFS if needed
+
+    app.use(cors());
     app.use(express.json());
-    app.use(cookieParser())
-    app.use('/', routes)
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-    connectDB();
+    app.use(express.urlencoded({ extended: true }));
+    app.use(cookieParser());
+    (async () => await import('./src/services/emailWorker.mjs'))
+    (async () => await import('./src/services/auditlogWorker.mjs'))
+    app.use('/', routes);
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+    // Global error handlers
     process.on('unhandledRejection', (reason, promise) => {
       console.error('Unhandled rejection:', reason);
     });
+
     process.on('uncaughtException', (err) => {
       console.error('Uncaught Exception:', err);
-      process.exit(1); // Exit safely
-    });   
-    app.get('/', (req, res) => {
-      res.send('api is running .....')
-    }); 
-    // Start the server only after DB is ready
-    app.listen(PORT, () =>{console.log(`server is running on port: ${PORT}`)})
+      process.exit(1);
+    });
+
+    // ✅ Start server
+    app.listen(PORT, () => {
+      console.log(`✅ Server is running on port: ${PORT}`);
+    });
+
   } catch (err) {
     console.error('❌ Failed to start server:', err.message);
     process.exit(1);
   }
-  }
-startServer()
+}
+
+startServer();
 
