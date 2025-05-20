@@ -126,7 +126,6 @@ export const updateAdmission = async (req, res) => {
 };
 
 
-
 export const getAllAdmissions = async (req, res) => {
   try {
     const {

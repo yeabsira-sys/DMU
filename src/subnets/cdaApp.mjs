@@ -1,22 +1,20 @@
 import express from 'express'
 import { verifyJWT } from '../middlewares/jwtVerify.mjs'
-import authenticatonRoutes from '../routes/shared/authenticatonRoutes.mjs'
 import refreshTokenRoute from '../routes/shared/refreshTokenRoute.mjs'
 import changePassword from '../routes/shared/changePassword.mjs'
-import imagesRoutes from '../routes/fileRoute/imagesRoutes.mjs'
-import  newsRouter  from '../routes/news/newsRoutes.mjs'
+import {adminFileRouter} from '../routes/fileRoute/imagesRoutes.mjs'
+import  {adminNewsRouter}  from '../routes/news/newsRoutes.mjs'
 import { verifyCDA } from '../middlewares/verifyCDA.mjs'
-import admissionRoutes from '../routes/admissions/admissionRoutes.mjs'
-import forgetPassword from '../routes/shared/forgetPassword.mjs'
+import {adminRouter} from '../routes/admissions/admissionRoutes.mjs'
 
 const router = express.Router()
 
 router.use(verifyJWT)
 router.use(verifyCDA)
 router.use('/auth/changepassword', changePassword)
-router.use('/images', imagesRoutes)
-router.use('/news', newsRouter)
-router.use('/admission', admissionRoutes)
+router.use('/file', adminFileRouter)
+router.use('/news', adminFileRouter)
+router.use('/admission', adminRouter)
 
 
 export default router

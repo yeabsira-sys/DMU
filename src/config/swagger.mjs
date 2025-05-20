@@ -14,9 +14,9 @@ const options = {
             description: 'API documentation for Debre Markos University Backend',
         },
         servers: [
-            { url: 'http://admin.localhost:3000', description: 'admin subdomain'},
-            { url: 'http://cda.localhost:3000', description: 'CDA subdomain'},
-            { url: 'http://stdportal.localhost:3000', description: 'students subdomain'},
+            { url: 'http://localhost:3000/admin', description: 'admin subdomain'},
+            { url: 'http://localhost:3000/cda', description: 'CDA subdomain'},
+            { url: 'http://localhost:3000/studentPortal', description: 'students subdomain'},
             { url: 'http://localhost:3000', description: ' main domain'},
         ],
         components: {

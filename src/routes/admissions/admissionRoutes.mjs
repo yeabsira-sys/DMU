@@ -2,7 +2,6 @@ import express from 'express'
 import { validate } from '../../middlewares/validate.mjs';
 import { admissionSchema } from '../../validations/admissionSchema.mjs';
 import { auditLogger } from '../../middlewares/auditLoger.mjs';
-const router = express.Router()
 import {
   createAdmission,
   getAllAdmissions,
@@ -11,13 +10,8 @@ import {
   exportAdmissionsToExcel
 } from '../../controllers/admissionController.mjs';
 
-const authorizeRoles = (role) => {
-    return (req,res,next) => {
-        if(role !== 'admin') return res.status(401).json({message: 'unauthorized'}) 
-            next()
-    }
-}
-
+const adminRouter = express.Router()
+const publicRouter = express.Router()
 /**
  * @swagger
  * tags:
@@ -48,7 +42,7 @@ const authorizeRoles = (role) => {
  *         description: Bad request
  */
 
-router.post('/', auditLogger('admission post creation'), validate(admissionSchema), createAdmission);
+adminRouter.post('/', auditLogger('admission post creation'), validate(admissionSchema), createAdmission);
 
 /**
  * @swagger
@@ -108,7 +102,8 @@ router.post('/', auditLogger('admission post creation'), validate(admissionSchem
  *                 $ref: '#/components/schemas/AdmissionProgram'
  */
 
-router.get('/', getAllAdmissions);
+publicRouter.get('/', getAllAdmissions);
+adminRouter.get('/', getAllAdmissions);
 // router.get('/:id', getAdmissionById);
 
 /**
@@ -141,7 +136,7 @@ router.get('/', getAllAdmissions);
  *         description: Program not found
  */
 
-router.patch('/:id', auditLogger('admission programs changes'), validate(admissionSchema), updateAdmission);
+adminRouter.patch('/:id', auditLogger('admission programs changes'), validate(admissionSchema), updateAdmission);
 
 /** 
  *@swagger
@@ -178,7 +173,7 @@ router.patch('/:id', auditLogger('admission programs changes'), validate(admissi
  *       200:
  *         description: Toggled isActive status
  */
-router.put('/:id/toggle', authorizeRoles('admin'), toggleAdmissionStatus);
+adminRouter.put('/:id/toggle', toggleAdmissionStatus);
 
 
 /**
@@ -203,7 +198,6 @@ router.put('/:id/toggle', authorizeRoles('admin'), toggleAdmissionStatus);
  *               type: string
  *               format: binary
  */
-router.get('/export/excel', authorizeRoles('admin'), exportAdmissionsToExcel);
+adminRouter.get('/export/excel',exportAdmissionsToExcel);
 
-
-export default router
+export  {publicRouter, adminRouter}

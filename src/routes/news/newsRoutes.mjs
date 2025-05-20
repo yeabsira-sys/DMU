@@ -12,7 +12,8 @@ import { objectIdValidation } from "../../validations/objectIdValidation.mjs";
 import { verifyAdminOrCDA } from "../../middlewares/verifyForAdminOrCDA.mjs";
 import { auditLogger } from "../../middlewares/auditLoger.mjs";
 
-const router = express.Router();
+const adminNewsRouter = express.Router();
+const publicNewsRouter = express.Router();
 
 // create news
 
@@ -37,7 +38,7 @@ const router = express.Router();
  *         description: Validation error
  */
 
-router.post("/", auditLogger('creating news'),validate(createNewsValidationSchema), newsPostController);
+adminNewsRouter.post("/", auditLogger('creating news'),validate(createNewsValidationSchema), newsPostController);
 
 // search for news  
 
@@ -125,7 +126,7 @@ router.post("/", auditLogger('creating news'),validate(createNewsValidationSchem
  *         description: Filtered news results
  */
 
-router.get('/search', validateNewsSearch(searchNewsValidationSchema), filterNews )
+publicNewsRouter.get('/search', validateNewsSearch(searchNewsValidationSchema), filterNews )
 /**
  * @swagger
  * /news/filter:
@@ -211,7 +212,7 @@ router.get('/search', validateNewsSearch(searchNewsValidationSchema), filterNews
  */
 
 
-router.get('/filter', auditLogger('filtering news'),validateNewsSearch(searchNewsValidationSchema), filterNewsAdmin )
+adminNewsRouter.get('/filter', auditLogger('filtering news'),validateNewsSearch(searchNewsValidationSchema), filterNewsAdmin )
 
 // update news info
 
@@ -241,7 +242,9 @@ router.get('/filter', auditLogger('filtering news'),validateNewsSearch(searchNew
  *         description: News item not found           
  */
 
-router.get("/:_id", validateObjectId(objectIdValidation), getNewsById)
+adminNewsRouter.get("/:_id", validateObjectId(objectIdValidation), getNewsById)
+
+publicNewsRouter.get("/:_id", validateObjectId(objectIdValidation), getNewsById)
 
 /**
  * @swagger
@@ -286,7 +289,7 @@ router.get("/:_id", validateObjectId(objectIdValidation), getNewsById)
  *         description: Internal server error
  */
 
-router.patch("/:_id", auditLogger('updating news'), validate(editNewsValidationSchema), updateNews)
+adminNewsRouter.patch("/:_id", auditLogger('updating news'), validate(editNewsValidationSchema), updateNews)
 
 /**
  *  @swagger
@@ -316,7 +319,7 @@ router.patch("/:_id", auditLogger('updating news'), validate(editNewsValidationS
  *       403:
  *         description: forbidden attempt
  */
-router.put('/hide', auditLogger('hide news'), validateObjectId(objectIdValidation), hideNews)
+adminNewsRouter.put('/hide', auditLogger('hide news'), validateObjectId(objectIdValidation), hideNews)
 // delete news
 
 
@@ -348,6 +351,6 @@ router.put('/hide', auditLogger('hide news'), validateObjectId(objectIdValidatio
  *       403:
  *         description: forbidden attempt
  */
-router.delete("/:_id", validateObjectId(objectIdValidation), deleteNews)
+adminNewsRouter.delete("/:_id", validateObjectId(objectIdValidation), deleteNews)
 
-export default router;
+export {adminNewsRouter, publicNewsRouter};

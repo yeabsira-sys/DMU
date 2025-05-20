@@ -3,7 +3,6 @@ import vhost from "vhost";
 import adminApp from '../subnets/adminApp.mjs';
 import cdaApp from '../subnets/cdaApp.mjs';
 import stdPortalApp from '../subnets/stdPortalApp.mjs';
-import imagesRoutes from './fileRoute/imagesRoutes.mjs'
 import { requireJsonBody } from "../middlewares/checkBodyForjson.mjs";
 import publicRoutes from '../subnets/publicRoutes.mjs'
 import cors from 'cors'
@@ -16,11 +15,8 @@ router.use((req, res, next) => {
   next();
 });
 
-router.use(vhost('admin.localhost', adminApp));
-router.use(vhost('cda.localhost', cdaApp));
-router.use(vhost('studentportal.localhost', stdPortalApp));
+router.use('/admin', adminApp);
+router.use('/cda', cdaApp);
+router.use('/studentPortal', stdPortalApp);
 router.use('/', publicRoutes)
-//  router.use('/', newsRoutes)
-router.use('/file', imagesRoutes)
-
 export default router;

@@ -9,7 +9,8 @@ import { streamImageById } from '../../controllers/getImageController.mjs';
 import { deleteImages } from '../../controllers/deleteFileController.mjs'
 import { validateArrayObjectId } from '../../middlewares/validateArrayObjectId.mjs';
 
-const router = express.Router()
+const adminFileRouter = express.Router()
+const publicFileRouter = express.Router()
 /**
  * @swagger
  * /file/news/image:
@@ -53,11 +54,13 @@ const router = express.Router()
  *         description: Invalid image or validation failed
  */
 
-router.post('/news/image', upload.array('images'),  validateImageData(imageValidation), uploadFile );
+adminFileRouter.post('/news/image', upload.array('images'),  validateImageData(imageValidation), uploadFile );
 
 // get image by id
-router.get('/image/:_id', validateObjectId(objectIdValidation), streamImageById )
+publicFileRouter.get('/image/:_id', validateObjectId(objectIdValidation), streamImageById )
+
+adminFileRouter.get('/image/:_id', validateObjectId(objectIdValidation), streamImageById )
 
 // Delete image
-router.delete('/image', validateArrayObjectId(objectIdValidation), deleteImages )
-export default router;
+adminFileRouter.delete('/image', validateArrayObjectId(objectIdValidation), deleteImages )
+export  {adminFileRouter, publicFileRouter};
