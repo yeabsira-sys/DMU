@@ -1,26 +1,35 @@
-import bcrypt from "bcryptjs";
-import  {User} from '../models/User.mjs'
-import dotenv from 'dotenv'
-import queueEmail from "../queues/emailQueue.mjs";
+import bcrypt from 'bcryptjs';
+import { User } from '../models/User.mjs';
+import queueEmail from '../queues/emailQueue.mjs';
 
-dotenv.config()
+export const verifyResetCode = async (req, res) => {
+  try {
+    const { email, code, newPassword, confirmPassword } = req.body;
 
-export const changePassword = async (req,res)=> {
-    const {userName, newPassword, confirmPassword } = req.body;
-    const email = req.user?.email
+    if (!email || !code) {
+      return res.status(400).json({ message: 'Email and  code are required.' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user || !user.recoveryCode || !user.recoveryCodeExpires) {
+      return res.status(400).json({ message: 'Invalid or expired reset code.',
+       });
+    }
+
+    if (parseInt(user.recoveryCode) !== code) {
+      return res.status(400).json({ message: 'Incorrect reset code.' });
+    }
+
+    if (new Date() > user.recoveryCodeExpires) {
+      return res.status(400).json({ message: 'Reset code has expired.' });
+    }
     if(newPassword !== confirmPassword) return res.status(400).json({message: 'password must match'})
-    const hashedPassword = await bcrypt.hash( newPassword, 10 )
-    try {
-    const user = await User.findOne({email})
-    if(user.password == hashedPassword) return res.status(403).json({"message": "previous password is forbiden"})
-    
-    user.userName = userName
+    const hashedPassword = await bcrypt.hash( newPassword, 10 )    
     user.password = hashedPassword
     const changes = {
       prev: user.password,
       new: hashedPassword
     }
-    req.changes = changes
     const emailData = {
         to: user.email,
         subject: "you passwor has been changed",
@@ -79,12 +88,16 @@ export const changePassword = async (req,res)=> {
 </body>
 </html>
 ` }
-        await queueEmail(emailData)
-   const updatedUser = await user.save()
+const updatedUser = await user.save()
+if(!updatedUser) return res.status(400).json({message: 'password could not be changed, pleas try again'})
+    user.recoveryCode = 0
+    User.recoveryCodeExpires = 0
+    await user.save()
+    await queueEmail(emailData)
   return res.status(200).json({"message": "password successfuly changed"})
-    }catch(err) {
-        console.log(err)
-        return res.status(500).json({"message": "password could mot be changed, enternal server error"})
-    }
     
+  } catch (error) {
+    console.error('Error in password reset:', error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
 }

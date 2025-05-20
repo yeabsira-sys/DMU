@@ -1,5 +1,139 @@
+security:
+  - bearerAuth: []
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
+    NewsResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique identifier for the news article
+          example: "60b8d295f1a3f23a84d92f1c"
+        title:
+          type: string
+          description: Title of the news article
+          example: "University Launches New Research Center"
+        content:
+          type: string
+          description: Full content of the news article
+          example: "The university has officially opened a new interdisciplinary research center..."
+        description:
+          type: string
+          description: Short summary of the news article
+          example: "Brief about the newly launched research center."
+        detail:
+          type: string
+          description: Additional details related to the news
+          example: "This center will focus on AI and data science innovations."
+        images:
+          type: array
+          description: List of images associated with the news article
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "6648702cde20e4af27ff92d0"
+              uri:
+                type: string
+                example: "/uploads/news/6648702cde20e4af27ff92d0.jpg"
+              name:
+                type: string
+                example: "research-center-opening.jpg"
+        author:
+          type: string
+          description: Author of the news article
+          example: "John Doe"
+    EditNews:
+      type: object
+      required:
+        - title
+        - content
+        - description
+        - detail
+        - author
+        - isHidden
+        - adminLoked
+        - cdaLoked
+        - strong
+        - imageChanged
+      properties:
+        title:
+          type: string
+          example: "University Launches New Research Center"
+        content:
+          type: string
+          example: "Full article content here..."
+        description:
+          type: string
+          example: "Short summary of the news article."
+        detail:
+          type: string
+          example: "Additional details or subtext."
+        author:
+          type: string
+          example: "Admin Name"
+        isHidden:
+          type: boolean
+          example: false
+        socialMediaPosted:
+          type: array
+          items:
+            type: string
+            enum: [facebook, telegram]
+        imageNames:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
+        adminLoked:
+          type: boolean
+          example: false
+        cdaLoked:
+          type: boolean
+          example: true
+        strong:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+    ObjectIdParam:
+      type: object
+      properties:
+        _id:
+          type: string
+          pattern: "^[a-fA-F0-9]{24}$"
+          description: A valid MongoDB ObjectId
+      required:
+        - _id
     searchNewsQuery:
       type: object
       properties:
@@ -15,22 +149,14 @@ components:
           type: boolean
           description: Filter by visibility status
           example: false
-        editedBy:
-          type: string
-          description: Filter by the user who edited the news
-          example: "editorUser"
-        postedBy:
-          type: string
-          description: Filter by the user who posted the news
-          example: "posterUser"
         fromDate:
           type: string
-          format: date
+          format: date-time
           description: Filter news posted after this date
           example: "2024-01-01"
         toDate:
           type: string
-          format: date
+          format: date-time
           description: Filter news posted before this date
           example: "2024-12-31"
         description:

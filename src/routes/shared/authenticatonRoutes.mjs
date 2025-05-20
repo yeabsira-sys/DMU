@@ -2,9 +2,8 @@ import express from 'express'
 import {validate} from '../../middlewares/validate.mjs'
 import { authSchema } from '../../validations/authSchema.mjs'
 import { loginUser } from '../../controllers/loginController.mjs'
-import { verifyJWT } from '../../middlewares/jwtVerify.mjs'
 import { logout } from '../../controllers/logoutController.mjs'
-import { actorLogin } from '../../middlewares/actorlogin.mjs'
+// import { actorLogin } from '../../middlewares/actorlogin.mjs'
 import { auditLogger } from '../../middlewares/auditLoger.mjs'
 
 const router = express.Router()
@@ -28,14 +27,25 @@ const router = express.Router()
  *       '400':
  *         description: Invalid input or authentication failed
  */
-router.post('/login', auditLogger('system login'), validate(authSchema), actorLogin, loginUser )
+router.post('/login', auditLogger('system login'), validate(authSchema), loginUser )
 
 // logout 
-router.get('/logout', auditLogger('system logout'),  logout)
 
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: User logout
+ *     responses:
+ *       '200':
+ *         description: Successfully authenticated
+ *       '400':
+ *         description: Invalid input or authentication failed
+ */
+router.get('/logout', auditLogger('system logout'),  logout)
+router.put('recovery', ()=>{})
 // get logged in user
-router.get('/:me', verifyJWT,  (req, res) => {
-    res.status(200).send('user')
-})
 
 export default router;

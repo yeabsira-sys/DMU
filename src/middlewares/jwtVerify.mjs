@@ -6,7 +6,7 @@ dotenv.config()
 export const verifyJWT = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader) return res.status(401).json({"message": "unauthorized"});
-    // console.log(authHeader);
+    console.log(authHeader);
     const token = authHeader.split(' ')[1];
     jwt.verify(
         token,

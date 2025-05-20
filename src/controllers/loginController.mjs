@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import  {User} from '../models/User.mjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import queueEmail from "../queues/emailQueue.mjs";
@@ -65,19 +64,27 @@ export const loginUser = async (req,res)=> {
               user.lastLogin = new Date();
               await user.save();
               
-              const payload = { 
+              const secreteUser = { 
                 userName: user.userName,
                 role: user.role,
                 email: user.email,
                 id: user._id,
                 password: user.password
               }
-              const accessToken = jwt.sign(payload,
+
+              const accessToken = jwt.sign(secreteUser,
                 process.env.JWT_ACCESS_TOKEN,
                 { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
               );
+              const payload = {
+                accessToken,
+                userName: user.userName,
+                email: user.email,
+                id: user._id,
+                role: user.role
+              }
     // write refresh token to the user record so it can be used to refresh the access token
-    const refreshToken = jwt.sign(payload,
+    const refreshToken = jwt.sign(secreteUser,
       process.env.JWT_REFRESH_TOKEN,
       { expiresIn: process.env.JWT_EXPIRES_IN || '2d' }
     );
@@ -86,14 +93,12 @@ export const loginUser = async (req,res)=> {
     user.refreshToken = refreshToken
     user.lastLogin =  Now.toISOString()
     await user.save();
-        req.user = payload
+        req.user = secreteUser
         res.cookie('dmujwtrefreshtoken', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000});
         
+
         //send the access token to the user
-        
-        res.status(200).json({accessToken})
-        
-        
+        res.status(200).json(payload)
       } catch (error) {
         console.log(error)
         

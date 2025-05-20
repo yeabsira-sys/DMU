@@ -11,7 +11,7 @@ import { deleteUserSchema} from '../validations/deleteUserSchema.mjs'
 
 
 const router = express.Router();
-router.use(verifyAdmin)
+// router.use(verifyAdmin)
 
 //search for user USED TO FILTER USER
 

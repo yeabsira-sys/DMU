@@ -10,6 +10,47 @@ import { deleteImages } from '../../controllers/deleteFileController.mjs'
 import { validateArrayObjectId } from '../../middlewares/validateArrayObjectId.mjs';
 
 const router = express.Router()
+/**
+ * @swagger
+ * /file/news/image:
+ *   post:
+ *     tags:
+ *       - Image
+ *     summary: Upload an image file
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Image file (jpeg, png, webp). Max size 20MB
+ *     responses:
+ *       '200':
+ *         description: Image uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mimetype:
+ *                   type: string
+ *                   example: image/jpeg
+ *                 originalname:
+ *                   type: string
+ *                   example: example.jpg
+ *                 size:
+ *                   type: number
+ *                   example: 1456789
+ *       '400':
+ *         description: Invalid image or validation failed
+ */
+
 router.post('/news/image', upload.array('images'),  validateImageData(imageValidation), uploadFile );
 
 // get image by id

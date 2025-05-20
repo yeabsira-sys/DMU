@@ -4,6 +4,7 @@ import yaml from 'js-yaml'
 
 const componentsDoc = yaml.load(fs.readFileSync('./docs/swagger.yaml', 'utf-8'))
 const newsComponents = yaml.load(fs.readFileSync('./docs/newsSchema.yaml', 'utf-8'))
+const admissionComponents = yaml.load(fs.readFileSync('./docs/admission.yaml', 'utf-8'))
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -19,9 +20,24 @@ const options = {
             { url: 'http://localhost:3000', description: ' main domain'},
         ],
         components: {
-            ...componentsDoc.components, 
-            ...newsComponents.components
-        }
+          securitySchemes: {
+                bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+            },
+  schemas: {
+    ...componentsDoc.components.schemas,
+    ...newsComponents.components.schemas,
+    ...admissionComponents.components.schemas,
+  },
+},
+security: [
+   {
+    bearerAuth: []
+   }
+],
     },
     apis: ['./src/routes/**/*.mjs'],
 };

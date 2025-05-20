@@ -15,6 +15,8 @@ const userSchema = new mongoose.Schema({
   refreshToken: String,
   failedLoginAttempts: { type: Number, default: 0 },
   lockUntil: { type: Date, default: null },
+  recoveryCode: { type: String, default: null },
+  recoveryCodeExpires: { type: Date, default: null },
 });
 
 export const User = mongoose.model('user', userSchema)

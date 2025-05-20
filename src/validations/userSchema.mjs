@@ -55,3 +55,9 @@ export const suspendUserSchema = Joi.object({
       Joi.string().min(3).max(30)             
     ).required().label('email, phone, or userName')
 })
+
+export const recoveryValidation = Joi.object({
+  email: Joi.string().email(),
+  recoveryCode: Joi.string(),
+  recoveryCodeExpires: Joi.date(),
+})

@@ -9,14 +9,11 @@ import mongoose from "mongoose";
 import { changeMetadata } from "../services/changeFileMetaData.mjs";
 import { ObjectId } from "mongodb";
 import { removeMatchIds } from "../services/removeMatchIds.mjs";
-import { verifyAdmin } from "../middlewares/checkForAdmin.mjs";
-import { verifyCDA } from "../middlewares/verifyCDA.mjs";
 import { verifyAdminOrCDA } from "../middlewares/verifyForAdminOrCDA.mjs";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 export const newsPostController = async (req, res, next) => {
-  // await verifyCDA(req, res, next);
   if(!req.user.role == 'cda') return res.status(403).json({message: 'forbidden'})
   try {
     let newsData = (({
@@ -42,7 +39,6 @@ export const newsPostController = async (req, res, next) => {
     const imageData = await fs.readFile("imagefile.json", "utf-8");
     const images = await JSON.parse(imageData);
     await fs.unlink("imagefile.json")
-    console.log(images);
     const postedBy = req.user.id || "";
     newsData = {
       ...newsData,
@@ -71,13 +67,15 @@ export const newsPostController = async (req, res, next) => {
 // filter search
 export const filterNews = async (req, res) => {
   try {
-    const { title, author, fromDate, toDate, page = 1, limit = 10 } = req.query;
+    const { title, author, fromDate, toDate, page = 1, limit = 10, description } = req.query;
     const filter = {};
 
     if (title) {
       filter.title = { $regex: title, $options: "i" };
     }
-
+        if (description) {
+      filter.description = { $regex: author, $options: "i" };
+    }
     if (author) {
       filter.author = { $regex: author, $options: "i" };
     }
@@ -212,10 +210,11 @@ export const filterNewsAdmin = async (req, res) => {
 // GET news by ID for naive users
 export const getNewsById = async (req, res) => {
   try {
+    const role = req.user?.role || 'naiveUser'
     const { _id } = req.params;
     const news = await News.findOne({ _id: _id, isHidden: false });
     if (!news) return res.status(404).json({ error: "News not found" });
-
+    if(role == 'admin' || role == 'cda') return res.status(200).json({payload: news})
     const payload = (({
       title,
       content,
@@ -390,7 +389,7 @@ export const deleteNews = async (req, res) => {
   }
 };
 export const hideNews = async (req, res) => {
-  verifyAdminOrCDA(res, req, next)
+  if(req.user?.role !== 'cda' || req.user?.role !== 'admin') return res.status(403).json({message: 'forbidden'})
   try {
     const { _id } = req.params;
     const news = await News.findOne({_id: new ObjectId(_id)})

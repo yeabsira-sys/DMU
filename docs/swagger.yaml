@@ -1,13 +1,50 @@
+security:
+- bearerAuth: []
+
 components:
+  ImageUploadMetadata:
+      type: object
+      required: [mimetype, originalname]
+      properties:
+        mimetype:
+          type: string
+          enum: [image/jpeg, image/png, image/webp]
+          description: The MIME type of the uploaded image
+        originalname:
+          type: string
+          description: Original name of the image file
+        size:
+          type: number
+          description: File size in bytes (max 20MB)
+          maximum: 20971520
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-  security:
-  - bearerAuth: []
-
   schemas:
+    PasswordRecovery:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: johndoe@example.com
+        code:
+          type: integer
+          example: 123456
+        newPassword:
+          type: string
+          minLength: 8
+          maxLength: 30
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'
+          example: StrongPass1
+          description: Must include at least one uppercase letter, one lowercase letter, and one number
+        confirmPassword:
+          type: string
+          example: StrongPass1
+          description: Must match the newPassword
+      required: []
     deleteUser:
       type: object
       required:

@@ -8,10 +8,12 @@ import changePassword from '../routes/shared/changePassword.mjs'
 import  auditlogsRoute  from '../routes/auditlogsRoute.mjs'
 import imagesRoutes from '../routes/fileRoute/imagesRoutes.mjs'
 import  newsRouter  from '../routes/news/newsRoutes.mjs'
+import forgetPassword from '../routes/shared/forgetPassword.mjs'
 
 const router = express.Router()
-router.use('/auth', authenticatonRoutes)
-router.use('/tokenrefresh', refreshTokenRoute)
+// router.use('/auth', authenticatonRoutes)
+// router.use('/recovery', forgetPassword)
+// router.use('/tokenrefresh', refreshTokenRoute)
 router.use(verifyJWT)
 router.use(verifyAdmin)
 router.use('/auth/changepassword', changePassword)

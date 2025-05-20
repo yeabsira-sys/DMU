@@ -15,16 +15,14 @@ export const authSchema = Joi.object({
  
 
 export const passwordChangeSchema = Joi.object({
-  userName: Joi.string().required().messages({
-    'any.required': 'Username is required',
-    'string.empty': 'Username cannot be empty'
-  }),
-  
+  userName: Joi.string().optional(),
+  email: Joi.string().email().optional(),
+  code: Joi.number().optional(),
   newPassword: Joi.string()
     .min(8)
     .max(30)
-    .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$')) // At least one lowercase, one uppercase, and one digit
-    .required()
+    .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$')) 
+    .optional()
     .messages({
       'string.min': 'Password must be at least 8 characters long',
       'string.pattern.base': 'Password must include at least one uppercase letter, one lowercase letter, and one number',
@@ -33,7 +31,7 @@ export const passwordChangeSchema = Joi.object({
 
   confirmPassword: Joi.any()
     .valid(Joi.ref('newPassword'))
-    .required()
+    .optional()
     .messages({
       'any.only': 'Passwords do not match',
       'any.required': 'Please confirm your password'
