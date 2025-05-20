@@ -12,6 +12,6 @@ export default router
 router.use('/auth', authenticatonRoutes)
 router.use('/auth/recovery', forgetPassword)
 router.use('/auth/tokenrefresh', refreshTokenRoute)
-router.use('/news', publicFileRouter)
+router.use('/news', publicNewsRouter)
 router.use('/admission', publicRouter)
 router.use('file', publicFileRouter)

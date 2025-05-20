@@ -15,6 +15,57 @@ const router = express.Router();
 
 //search for user USED TO FILTER USER
 
+
+/**
+ * @swagger
+ * /user/search:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Search and filter users
+ *     description: Filter and paginate user entries based on various criteria
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         description: Get single user by ObjectID
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: Filter by name (regex search)
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         description: Filter by email
+ *       - in: query
+ *         name: phone
+ *         schema:
+ *           type: string
+ *         description: Filter by phone
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [active, suspended]
+ *         description: Filter by status
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Pagination limit
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number
+ *     responses:
+ *       200:
+ *         description: Filtered user results
+ */
+
 router.get('/search', auditLogger('search for users'), getUserController)
 //create user
 // this is boiler plate for core implementation

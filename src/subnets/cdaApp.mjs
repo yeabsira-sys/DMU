@@ -13,7 +13,7 @@ router.use(verifyJWT)
 router.use(verifyCDA)
 router.use('/auth/changepassword', changePassword)
 router.use('/file', adminFileRouter)
-router.use('/news', adminFileRouter)
+router.use('/news', adminNewsRouter)
 router.use('/admission', adminRouter)
 
 

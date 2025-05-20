@@ -62,21 +62,6 @@ adminNewsRouter.post("/", auditLogger('creating news'),validate(createNewsValida
  *           type: string
  *         description: Filter by author
  *       - in: query
- *         name: isHidden
- *         schema:
- *           type: boolean
- *         description: Filter by visibility
- *       - in: query
- *         name: editedBy
- *         schema:
- *           type: string
- *         description: Filter by editor
- *       - in: query
- *         name: postedBy
- *         schema:
- *           type: string
- *         description: Filter by poster
- *       - in: query
  *         name: fromDate
  *         schema:
  *           type: string
@@ -103,24 +88,6 @@ adminNewsRouter.post("/", auditLogger('creating news'),validate(createNewsValida
  *         schema:
  *           type: string
  *         description: Page number
- *       - in: query
- *         name: adminLoked
- *         schema:
- *           type: boolean
- *         description: Filter by admin locked status
- *       - in: query
- *         name: cdaLoked
- *         schema:
- *           type: boolean
- *         description: Filter by CDA locked status
- *       - in: query
- *         name: socialMediaPosted
- *         schema:
- *           type: array
- *           items:
- *             type: string
- *             enum: [facebook, telegram]
- *         description: Social media platforms where the news is posted
  *     responses:
  *       200:
  *         description: Filtered news results
