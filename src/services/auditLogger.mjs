@@ -1,4 +1,4 @@
-import { AuditLogs } from '../models/Auditlogs.mjs'
+import  {AuditLogs}  from '../models/Auditlogs.mjs'
 import connectDB from '../config/db.mjs'
 export const logAction = async (auditData) => {
     try {

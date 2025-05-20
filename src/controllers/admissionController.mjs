@@ -1,25 +1,32 @@
 import { Admission } from '../models/Admission.mjs'
 import {ObjectId} from 'mongodb'
+import fs from 'fs/promises'
+import { deleteFiles } from '../services/deleteFileService.mjs';
 
 
 export const createAdmission = async (req, res) => {
-    if(req.user?.role !== 'admin' || req.user?.role !== 'cda') return res.status(401).json({message: 'un authorize'})
+      console.log(req.user.role)
+    if(req.user?.role !== 'admin' && req.user?.role !== 'cda') return res.status(401).json({message: 'un authorize'})
   try {
+    console.log(req.user.role)
+ const {
+  name, degreeLevel, department, description,
+  eligibilityRequirements, admissionCriteria, 
+  applicationStartDate, applicationDeadline, 
+  modeOfStudy, duration, tuitionFees, scholarshipInfo,
+  applicationLink, contactInfo, campusLocation, programCode,
+  requiredDocuments, faq, isActive
+} = req.body;
 
-    const admissionData = (({name, degreeLevel, department, description,
-                            eligibilityRequirements, admissionCriteria, 
-                            applicationStartDate, applicationDeadline, 
-                            modeOfStudy, duration, tuitionFees, scholarshipInfo,
-                            applicationLink, contactInfo, campusLocation, programCode,
-                            requiredDocuments, faq, isActive
-                        }) => ({
-                            name, degreeLevel, department, description,
-                            eligibilityRequirements, admissionCriteria, 
-                            applicationStartDate, applicationDeadline, 
-                            modeOfStudy, duration, tuitionFees, scholarshipInfo,
-                            applicationLink, contactInfo, campusLocation, programCode,
-                            requiredDocuments, faq, isActive
-                        }))(req.body)
+let admissionData = {
+  name, degreeLevel, department, description,
+  eligibilityRequirements, admissionCriteria, 
+  applicationStartDate, applicationDeadline, 
+  modeOfStudy, duration, tuitionFees, scholarshipInfo,
+  applicationLink, contactInfo, campusLocation, programCode,
+  requiredDocuments, faq, isActive
+};
+
     const imageData = await fs.readFile("imagefile.json", "utf-8");
         const images = await JSON.parse(imageData);
         await fs.unlink("imagefile.json")
@@ -30,6 +37,7 @@ export const createAdmission = async (req, res) => {
           postedBy,
         };
         try {
+          console.log(admissionData)
       const admission = await Admission.create(admissionData);
       return res.status(201).json({ payload: admission });
     } catch (error) {
@@ -50,10 +58,10 @@ export const createAdmission = async (req, res) => {
 
 export const updateAdmission = async (req, res) => {
   try {
-    const id = req.params?.id || null
+    let id = req.params?.id || null
     if(!id) return res.status(400).json({message: 'admission id is requires!'})
       id = new ObjectId(id)
-    const data = (({name,
+    let data = (({name,
   degreeLevel,
   department,
   description,
@@ -89,27 +97,29 @@ export const updateAdmission = async (req, res) => {
   requiredDocuments,
   faq}))(req.body)
   let admission = {}
-    for(const change of data){
-        if(change) admission.change = change
+  console.log(data, "data ")
+    for(const key in data){
+        if(data[key] !== null && data[key] !== undefined)
+           admission[key]= data[key];
     }
-
-    const updated = await Admission.findByIdAndUpdate(
-      id,
-      {
-        ...admission,
-        updatedAt: new Date()
-      },
-      {
-        new: true,
-        runValidators: true
-      }
-    );
+    console.log(admission, "admissions ipdate")
+    // const updated = await Admission.findByIdAndUpdate(
+    //   id,
+    //   {
+    //     ...admission,
+    //     updatedAt: new Date()
+    //   },
+    //   {
+    //     new: true,
+    //     runValidators: true
+    //   }
+    // );
 
     if (!updated) {
       return res.status(404).json({ message: 'Admission program not found' });
     }
 
-    res.json(updated);
+    res.status(200).json('updated');
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

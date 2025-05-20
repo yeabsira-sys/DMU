@@ -24,11 +24,13 @@ const router = express.Router()
  *           schema:
  *             type: object
  *             required:
- *               - file
+ *               - images
  *             properties:
- *               file:
- *                 type: string
- *                 format: binary
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: file
+ *                   format: binary
  *                 description: Image file (jpeg, png, webp). Max size 20MB
  *     responses:
  *       '200':

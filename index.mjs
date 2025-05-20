@@ -8,7 +8,6 @@ import swaggerSpec from './src/config/swagger.mjs';
 import swaggerUi from 'swagger-ui-express'
 import cors from 'cors'
 
-
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -22,8 +21,9 @@ async function startServer() {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
-    (async () => await import('./src/services/emailWorker.mjs'))
-    (async () => await import('./src/services/auditlogWorker.mjs'))
+  (async () => await import('./src/queues/index.mjs'))
+    // (async () => await import('./src/services/emailWorker.mjs'))
+    // (async () => await import('./src/services/auditlogWorker.mjs'))
     app.use('/', routes);
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

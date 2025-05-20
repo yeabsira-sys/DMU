@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import queueEmail from "../queues/emailQueue.mjs";
+// import queueEmail from "../queues/emailQueue.mjs";
+import { queueEmail } from '../queues/emailJob.mjs'
 import {findUserByIdentifier} from '../services/getUser.mjs'
 
 dotenv.config()

@@ -11,9 +11,6 @@ import forgetPassword from '../routes/shared/forgetPassword.mjs'
 
 const router = express.Router()
 
-router.use('/auth', authenticatonRoutes)
-router.use('/auth', forgetPassword)
-router.use('/tokenrefresh', refreshTokenRoute)
 router.use(verifyJWT)
 router.use(verifyCDA)
 router.use('/auth/changepassword', changePassword)

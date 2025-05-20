@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { User } from '../models/User.mjs';
-import queueEmail from '../queues/emailQueue.mjs';
+import {queueEmail} from '../queues/emailJob.mjs';
 
 export const verifyResetCode = async (req, res) => {
   try {

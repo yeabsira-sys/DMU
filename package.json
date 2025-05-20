@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "agenda": "^5.0.0",
     "bcryptjs": "^3.0.2",
     "bullmq": "^5.52.2",
     "cookie-parser": "^1.4.7",

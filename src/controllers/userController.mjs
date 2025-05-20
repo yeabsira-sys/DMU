@@ -1,7 +1,7 @@
 import  {User}  from '../models/User.mjs';
 import bcrypt from 'bcryptjs';
 import { generateUserName, generatePassword } from '../utils/userUtils.mjs';
-import queueEmail from '../queues/emailQueue.mjs'
+import {queueEmail} from '../queues/emailJob.mjs'
 
 
 export const createUser = async (req, res) => {

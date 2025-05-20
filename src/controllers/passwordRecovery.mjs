@@ -1,5 +1,5 @@
 import { User } from '../models/User.mjs';
-import queueEmail from '../queues/emailQueue.mjs';
+import {queueEmail} from '../queues/emailJob.mjs';
 import dotenv from 'dotenv';
 
 dotenv.config();

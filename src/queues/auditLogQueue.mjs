@@ -1,10 +1,12 @@
-// auditQueue.js
-import { Queue } from 'bullmq';
-import { connection } from '../redisConnection.mjs'; 
+// // auditQueue.js
+// import { Queue } from 'bullmq';
+// import { connection } from '../redisConnection.mjs';
+// import { safeQueueAdd } from '../utils/redisUtils.mjs';
 
-const auditQueue = new Queue('audit-logs', { connection });
+// const auditQueue = new Queue('audit-logs', { connection });
 
-export const enqueueAuditLog  = async (logData) => {
-    console.log('audit log queue adder function!')
-await auditQueue.add('audit-logs', logData)
-}
+// const enqueueAuditLog = async (logData) => {
+//   await safeQueueAdd(auditQueue, "audit-logs", logData);
+// };
+
+// export default enqueueAuditLog;

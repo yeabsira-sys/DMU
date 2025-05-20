@@ -26,4 +26,5 @@ export const admissionSchema = Joi.object({
   programCode: Joi.string().allow(''),
   requiredDocuments: Joi.array().items(Joi.string()),
   faq: Joi.string().allow(''),
+  isActive: Joi.boolean().allow(''),
 });

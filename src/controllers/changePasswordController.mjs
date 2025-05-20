@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import  {User} from '../models/User.mjs'
 import dotenv from 'dotenv'
-import queueEmail from "../queues/emailQueue.mjs";
+// import queueEmail from "../queues/emailQueue.mjs";
+import {queueEmail } from '../queues/emailJob.mjs'
 
 dotenv.config()
 

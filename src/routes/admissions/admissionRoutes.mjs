@@ -27,7 +27,7 @@ const authorizeRoles = (role) => {
 
 /**
  * @swagger
- * /admissions:
+ * /admission:
  *   post:
  *     summary: Create a new admission program
  *     tags: [AdmissionProgram]
@@ -113,7 +113,7 @@ router.get('/', getAllAdmissions);
 
 /**
  * @swagger
- * /admissions/{id}:
+ * /admission/{id}:
  *   patch:
  *     summary: Update an existing admission program
  *     tags: [AdmissionProgram]
@@ -141,7 +141,7 @@ router.get('/', getAllAdmissions);
  *         description: Program not found
  */
 
-router.patch('/:id', authorizeRoles('admin'), validate(admissionSchema), updateAdmission);
+router.patch('/:id', auditLogger('admission programs changes'), validate(admissionSchema), updateAdmission);
 
 /** 
  *@swagger
@@ -164,7 +164,7 @@ router.patch('/:id', authorizeRoles('admin'), validate(admissionSchema), updateA
 
 /**
  * @swagger
- * /admissions/{id}/toggle:
+ * /admission/{id}/toggle:
  *   put:
  *     summary: Toggle the isActive status of an admission program
  *     tags: [AdmissionProgram]
@@ -183,7 +183,7 @@ router.put('/:id/toggle', authorizeRoles('admin'), toggleAdmissionStatus);
 
 /**
  * @swagger
- * /admissions/export:
+ * /admission /export:
  *   get:
  *     summary: Export admissions to CSV or Excel
  *     tags: [AdmissionProgram]

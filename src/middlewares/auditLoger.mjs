@@ -1,4 +1,4 @@
-import { enqueueAuditLog } from '../queues/auditLogQueue.mjs';
+import  {enqueueAuditLog} from '../queues/auditJob.mjs';
 import extractMeta from '../utils/extractMetadata.mjs';
 
 export const auditLogger = (actionDescription) => {
