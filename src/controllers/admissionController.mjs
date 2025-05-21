@@ -1,9 +1,16 @@
 import { Admission } from '../models/Admission.mjs'
-import {ObjectId} from 'mongodb'
-import fs from 'fs/promises'
-import { deleteFiles } from '../services/deleteFileService.mjs';
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+import { fileExists } from "../utils/isFileExist.mjs";
+import { deleteFiles } from "../services/deleteFileService.mjs";
+import { findUserByIdentifier } from "../services/getUser.mjs";
+import { changeMetadata } from "../services/changeFileMetaData.mjs";
+import { ObjectId } from "mongodb";
+import { removeMatchIds } from "../services/removeMatchIds.mjs";
 
-
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 export const createAdmission = async (req, res) => {
       console.log(req.user.role)
     if(req.user?.role !== 'admin' && req.user?.role !== 'cda') return res.status(401).json({message: 'un authorize'})
@@ -26,10 +33,17 @@ let admissionData = {
   applicationLink, contactInfo, campusLocation, programCode,
   requiredDocuments, faq, isActive
 };
+        
 
-    const imageData = await fs.readFile("imagefile.json", "utf-8");
-        const images = await JSON.parse(imageData);
-        await fs.unlink("imagefile.json")
+   const imageFilePath = path.join(__dirname, "imagefile.json")
+        let images
+      if( await fileExists(imageFilePath)){
+        images = JSON.parse(imageData);
+        await fs.unlink(imageFilePath);
+      }
+      else{
+        images = []
+      }
         const postedBy = req.user.id || "";
         admissionData = {
           ...admissionData,
@@ -58,7 +72,7 @@ let admissionData = {
 
 export const updateAdmission = async (req, res) => {
   try {
-    let id = req.params?.id || null
+    let id = req.params?._id || null
     if(!id) return res.status(400).json({message: 'admission id is requires!'})
       id = new ObjectId(id)
     let data = (({name,
@@ -99,21 +113,87 @@ export const updateAdmission = async (req, res) => {
   let admission = {}
   console.log(data, "data ")
     for(const key in data){
-        if(data[key] !== null && data[key] !== undefined)
+        if(data[key] !== "" && data[key] !== undefined && data[key] !== null)
            admission[key]= data[key];
     }
-    console.log(admission, "admissions ipdate")
-    // const updated = await Admission.findByIdAndUpdate(
-    //   id,
-    //   {
-    //     ...admission,
-    //     updatedAt: new Date()
-    //   },
-    //   {
-    //     new: true,
-    //     runValidators: true
-    //   }
-    // );
+    const { imageNames, imageChanged, formerImages, imageIds } = req.body;
+    if (imageChanged) {
+      const imageFilePath = path.join(__dirname, "imagefile.json")
+        let images
+      if( await fileExists(imageFilePath)){
+        images = JSON.parse(imageData);
+        await fs.unlink(imageFilePath);
+      }
+      else{
+        images = []
+      }
+           const newImage = await removeMatchIds(imageIds, formerImages, images);
+      // console.log(newImage)
+      admission = {
+        ...admission,
+        images: newImage,
+      };
+
+      const updatedAdmission = await News.findByIdAndUpdate(
+        { _id: id},
+        {
+          $set: admission,
+        },
+        { new: true }
+      );
+
+      if (!updatedAdmission) {
+        return res.status(400).json({ message: "news could not be updated" });
+      }
+      await deleteFiles(imageIds);
+      return res.status(200).json({
+        payload: updatedAdmission,
+      });
+ 
+      // console.log(images);
+     
+    } else if (imageNames) {
+      const changes = await changeMetadata(imageNames);
+      console.log(changes)
+      if (changes.acknowledged == true) {
+        for (let i = 0; i < imageNames.length; i++) {
+          for (let j = 0; j < formerImages.length; j++) {
+            if (imageNames[i].id == formerImages[j].id) {
+              formerImages[j].name = imageNames[i].name
+            }
+          }
+        }
+        console.log(formerImages, 'former image')
+          admission.images = formerImages
+        const updatedAdmission = await News.findByIdAndUpdate(
+          { _id: id },
+          {
+            $set: admission,
+          },
+          { new: true }
+        );
+        if (!updatedAdmission)
+          return res
+            .status(400)
+            .json({ message: "news could not be updated!" });
+        res.status(200).json({ payload: updatedNews });
+      }
+    } else {
+      const updatedAdmission = await News.findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: admission,
+        },
+        { new: true }
+      );
+
+      if (!updateAdmission) {
+        return res.status(400).json({ message: "news could not be updated" });
+      }
+      res.status(200).json({
+        payload: updatedAdmission,
+      });
+    }
 
     if (!updated) {
       return res.status(404).json({ message: 'Admission program not found' });
@@ -179,7 +259,7 @@ export const getAllAdmissions = async (req, res) => {
 
 export const toggleAdmissionStatus = async (req, res) => {
   try {
-    const admission = await Admission.findById(req.params.id);
+    const admission = await Admission.findById(req.params._id);
     if (!admission) return res.status(404).json({ message: 'Program not found' });
 
     admission.isActive = !admission.isActive;
@@ -191,60 +271,51 @@ export const toggleAdmissionStatus = async (req, res) => {
   }
 };
 
+// get detail admission by id 
 
+export const getAdmissionById = async (req,res) => {
+  try {
+    const id = req.params._id
+    const detaileAdmission = await Admission.findOne({_id: new ObjectId(id)});
+    if(!detaileAdmission) return res.status(404).json({message: `no admission with id : ${id}`})
+    return res.status(200).json({payload: detaileAdmission})
+    
+  } catch (error) {
+    return res.status(500).json({message: 'internal server error', error: error.message})
+  }
+}
+ 
+export const deleteAdmission = async (req, res ) => {
+         console.log(req.params)
+  try {
+      const id  = req.params._id;
+      const admission = await Admission.findOne({_id: new ObjectId(id)})
+      if(!admission) return res.status(404).json({message: `no admission to be deleted with id ${id}`})
+        const images = admission.images
+  
+      let imagesId = []
+      
+      images.map((image) => {
+        imagesId.push(image.id)
+      })
+        const returnVal = await deleteFiles(imagesId)
+        if(!returnVal) return res.status(400).json({message: "admission can't be deleted"})
+  
+          const deleted = await Admission.findOneAndDelete({_id: new ObjectId(id)})
+          if(!deleted) return res.status(400).json({message: 'admission could not be deleted'})
+            res.sendStatus(200);
+    } catch (err) {
+      console.error("Delete admission Error:", err);
+      res.status(500).json({ error: "Failed to delete admission" });
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 import ExcelJS from 'exceljs';
+
 
 export const exportAdmissionsToExcel = async (req, res) => {
   try {
-    const admissions = await Admission.find({ isDeleted: false });
+    const admissions = await Admission.find({ isDeleted: false }).lean(); // lean() returns plain JS objects
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Admissions');
@@ -261,7 +332,19 @@ export const exportAdmissionsToExcel = async (req, res) => {
       { header: 'Active', key: 'isActive' },
     ];
 
-    admissions.forEach(admission => worksheet.addRow(admission));
+    admissions.forEach(admission => {
+      worksheet.addRow({
+        name: admission.name,
+        degreeLevel: admission.degreeLevel,
+        department: admission.department,
+        applicationStartDate: admission.applicationStartDate,
+        applicationDeadline: admission.applicationDeadline,
+        modeOfStudy: admission.modeOfStudy,
+        duration: admission.duration,
+        tuitionFees: admission.tuitionFees,
+        isActive: admission.isActive,
+      });
+    });
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename=admissions.xlsx');

@@ -246,7 +246,8 @@ export const getNewsByIdAdmin = async (req, res) => {
 
 // UPDATE news
 export const updateNews = async (req, res) => {
-  verifyAdminOrCDA(req, res, next)
+
+  if(req.user?.role !== 'admin' && req.user?.role !== 'cda') return res.status(401).json({message: 'Unauthorized'})
   if (!req.body)
     return res.status(400).json({ message: "update data are required" });
   try {
@@ -283,7 +284,9 @@ export const updateNews = async (req, res) => {
     if (imageChanged) {
       const imageFilePath = path.join(__dirname, "imagefile.json")
         let images
+        console.log(images)
       if( await fileExists(imageFilePath)){
+            const imageData = await fs.readFile("imagefile.json", "utf-8");
         images = JSON.parse(imageData);
         await fs.unlink(imageFilePath);
       }
@@ -365,7 +368,7 @@ export const updateNews = async (req, res) => {
 
 // SOFT DELETE news (set isHidden: true)
 export const deleteNews = async (req, res) => {
-  verifyAdminOrCDA(req, res, next)
+  if(req.user.role !== 'admin' && req.user.role !== 'cda') return res.sendStatus(401)
   try {
     const { _id } = req.params;
     const news = await News.findOne({_id: new ObjectId(_id)})

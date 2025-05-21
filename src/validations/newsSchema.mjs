@@ -40,8 +40,8 @@ export const editNewsValidationSchema = Joi.object({
     imageNames: Joi.array().items(Joi.object({
       id: Joi.string().required(),
       name: Joi.string().required(),
-    })),
-    imageIds: Joi.array().items(Joi.string().required()),
+    })).optional(),
+    imageIds: Joi.array().items(Joi.string().optional()),
     formerImages: Joi.array().items(
       Joi.object({
         id: Joi.string().required(),
@@ -49,7 +49,7 @@ export const editNewsValidationSchema = Joi.object({
         name: Joi.string().required(),
         _id: Joi.string().optional(),
       })
-    ),
+    ).required(),
     adminLoked: Joi.boolean().required(),
   cdaLoked: Joi.boolean().required(),
   strong: Joi.boolean().required(),

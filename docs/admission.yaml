@@ -34,3 +34,98 @@ components:
             type: string
         faq: { type: string }
         isActive: { type: boolean }
+
+    AdmissionProgramResponse:
+      type: object
+      properties:
+        name: { type: string }
+        degreeLevel: { type: string, enum: [Undergraduate, Postgraduate, PhD] }
+        department: { type: string }
+        description: { type: string }
+        eligibilityRequirements: { type: string }
+        admissionCriteria: { type: string }
+        applicationStartDate: { type: string, format: date }
+        applicationDeadline: { type: string, format: date }
+        modeOfStudy: { type: string, enum: [Full-time, Part-time, Online] }
+        duration: { type: string }
+        tuitionFees: { type: string }
+        scholarshipInfo: { type: string }
+        applicationLink: { type: string }
+        contactInfo: { type: string }
+        campusLocation: { type: string }
+        programCode: { type: string }
+        requiredDocuments:
+          type: array
+          items:
+            type: string
+        faq: { type: string }
+        isActive: { type: boolean }
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
+
+    EditAdmissionProgram:
+      type: object
+      required: [imageChanged, formerImages]
+      properties:
+        name: { type: string }
+        degreeLevel: { type: string, enum: [Undergraduate, Postgraduate, PhD] }
+        department: { type: string }
+        description: { type: string }
+        eligibilityRequirements: { type: string }
+        admissionCriteria: { type: string }
+        applicationStartDate: { type: string, format: date }
+        applicationDeadline: { type: string, format: date }
+        modeOfStudy: { type: string, enum: [Full-time, Part-time, Online] }
+        duration: { type: string }
+        tuitionFees: { type: string }
+        scholarshipInfo: { type: string }
+        applicationLink: { type: string }
+        contactInfo: { type: string }
+        campusLocation: { type: string }
+        programCode: { type: string }
+        requiredDocuments:
+          type: array
+          items:
+            type: string
+        faq: { type: string }
+        isActive: { type: boolean }
+        imageIds:
+          type: array
+          items:
+            type: string
+        imageNames:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
+        imageChanged:
+          type: boolean
+          example: true

@@ -5,13 +5,16 @@ import { auditLogger } from '../../middlewares/auditLoger.mjs';
 import {
   createAdmission,
   getAllAdmissions,
+  getAdmissionById,
   updateAdmission,
   toggleAdmissionStatus,
-  exportAdmissionsToExcel
+  exportAdmissionsToExcel,
+  deleteAdmission
 } from '../../controllers/admissionController.mjs';
-
-const adminRouter = express.Router()
-const publicRouter = express.Router()
+import { validateObjectId } from '../../middlewares/validateObjectID.mjs';
+import { objectIdValidation } from '../../validations/objectIdValidation.mjs';
+const adminAdmissionRouter = express.Router()
+const publicAdmissionRouter = express.Router()
 /**
  * @swagger
  * tags:
@@ -37,12 +40,12 @@ const publicRouter = express.Router()
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AdmissionProgram'
+ *               $ref: '#/components/schemas/AdmissionProgramResponse'
  *       400:
  *         description: Bad request
  */
 
-adminRouter.post('/', auditLogger('admission post creation'), validate(admissionSchema), createAdmission);
+adminAdmissionRouter.post('/', auditLogger('admission post creation'), validate(admissionSchema), createAdmission);
 
 /**
  * @swagger
@@ -102,9 +105,35 @@ adminRouter.post('/', auditLogger('admission post creation'), validate(admission
  *                 $ref: '#/components/schemas/AdmissionProgram'
  */
 
-publicRouter.get('/', getAllAdmissions);
-adminRouter.get('/', getAllAdmissions);
-// router.get('/:id', getAdmissionById);
+
+/**
+ * @swagger
+ * /admission/{id}:
+ *   get:
+ *     summary: Get detailed admission program
+ *     tags:
+ *       - AdmissionProgram
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Get a single admission program by ID
+ *     responses:
+ *       200:
+ *         description: Admission program detail
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AdmissionProgram'
+ */
+
+publicAdmissionRouter.get('/', getAllAdmissions);
+adminAdmissionRouter.get('/', getAllAdmissions);
+
+ publicAdmissionRouter.get('/:_id', validateObjectId(objectIdValidation), getAdmissionById);
+ adminAdmissionRouter.get('/:_id',validateObjectId(objectIdValidation), getAdmissionById);
 
 /**
  * @swagger
@@ -124,23 +153,23 @@ adminRouter.get('/', getAllAdmissions);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AdmissionProgram'
+ *             $ref: '#/components/schemas/EditAdmissionProgram'
  *     responses:
  *       200:
  *         description: Admission program updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AdmissionProgram'
+ *               $ref: '#/components/schemas/AdmissionProgramResponse'
  *       404:
  *         description: Program not found
  */
 
-adminRouter.patch('/:id', auditLogger('admission programs changes'), validate(admissionSchema), updateAdmission);
+adminAdmissionRouter.patch('/:_id',validateObjectId(objectIdValidation), auditLogger('admission programs changes'), validate(admissionSchema), updateAdmission);
 
 /** 
  *@swagger
- *  /admission/delete:{_id}:
+ *  /admission/{id}:
  *   delete:
  *     summary: Soft-delete an admission program
  *     tags: [AdmissionProgram]
@@ -154,8 +183,7 @@ adminRouter.patch('/:id', auditLogger('admission programs changes'), validate(ad
  *       200:
  *         description: Admission program soft-deleted
  */
-// router.delete('/:id', authorizeRoles('admin'), deleteAdmission);
-
+adminAdmissionRouter.delete('/:_id',validateObjectId(objectIdValidation), deleteAdmission);
 
 /**
  * @swagger
@@ -173,12 +201,12 @@ adminRouter.patch('/:id', auditLogger('admission programs changes'), validate(ad
  *       200:
  *         description: Toggled isActive status
  */
-adminRouter.put('/:id/toggle', toggleAdmissionStatus);
+adminAdmissionRouter.put('/:_id/toggle',  validateObjectId(objectIdValidation), toggleAdmissionStatus);
 
 
 /**
  * @swagger
- * /admission /export:
+ * /admission/export/excel:
  *   get:
  *     summary: Export admissions to CSV or Excel
  *     tags: [AdmissionProgram]
@@ -198,6 +226,6 @@ adminRouter.put('/:id/toggle', toggleAdmissionStatus);
  *               type: string
  *               format: binary
  */
-adminRouter.get('/export/excel',exportAdmissionsToExcel);
+adminAdmissionRouter.get('/export/excel',exportAdmissionsToExcel);
 
-export  {publicRouter, adminRouter}
+export  {adminAdmissionRouter, publicAdmissionRouter}

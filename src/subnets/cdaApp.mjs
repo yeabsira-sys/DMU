@@ -5,7 +5,8 @@ import changePassword from '../routes/shared/changePassword.mjs'
 import {adminFileRouter} from '../routes/fileRoute/imagesRoutes.mjs'
 import  {adminNewsRouter}  from '../routes/news/newsRoutes.mjs'
 import { verifyCDA } from '../middlewares/verifyCDA.mjs'
-import {adminRouter} from '../routes/admissions/admissionRoutes.mjs'
+import {adminAdmissionRouter} from '../routes/admissions/admissionRoutes.mjs'
+import { adminCampusRouter } from '../routes/universityData/campuses.mjs'
 
 const router = express.Router()
 
@@ -14,7 +15,8 @@ router.use(verifyCDA)
 router.use('/auth/changepassword', changePassword)
 router.use('/file', adminFileRouter)
 router.use('/news', adminNewsRouter)
-router.use('/admission', adminRouter)
+router.use('/admission', adminAdmissionRouter)
+router.use('/campuses', adminCampusRouter)
 
 
 export default router

@@ -1,0 +1,286 @@
+components:
+  schemas:
+    Campuses:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The name of the campus
+        description:
+          type: string
+          description: A short description of the campus
+        isHidden:
+          type: boolean
+          example: false
+      example:
+        name: Main Campus
+        description: The central campus located downtown
+        isHidden: false
+
+    updateCampus:
+      type: object
+      required:
+        - name
+        - isHidden
+        - imageChanged
+        - formerImages
+      properties:
+        name:
+          type: string
+          description: The name of the campus
+        description:
+          type: string
+          description: A short description of the campus
+        img:
+          type: string
+          format: uri
+          description: Image URL of the campus
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
+        # campusLife
+    CampusLife:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Title of the campus life content
+        description:
+          type: string
+          description: Description of the campus life topic
+        img:
+          type: string
+          format: uri
+          description: Image URL representing the topic
+      example:
+        name: Sports Activities
+        description: Wide range of sports and recreational activities
+
+    College:
+      type: object
+      required:
+        - name
+        - campus
+      properties:
+        name:
+          type: string
+          description: Name of the college
+        description:
+          type: string
+          description: Description of the college
+        location:
+          type: string
+          description: Physical location of the college
+        campus:
+          type: string
+          format: objectId
+          description: Reference to the campus ID
+      example:
+        name: College of Natural Sciences
+        description: Offers programs in Physics, Chemistry, and Biology
+        location: North Campus
+        campus: 60d21b4667d0d8992e610c85
+    
+
+    Department:
+      type: object
+      required:
+        - name
+        - school
+      properties:
+        name:
+          type: string
+          description: Name of the department
+        description:
+          type: string
+          description: Description of the department
+        school:
+          type: string
+          format: objectId
+          description: Reference to the associated school
+      example:
+        name: Department of Computer Science
+        desc: Focuses on programming, algorithms, and software engineering
+        school: 60d21b4667d0d8992e610c99
+  
+    
+    Office:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the office
+        location:
+          type: string
+          description: Location of the office
+        president:
+          type: string
+          description: President or head of the office
+        msg:
+          type: string
+          description: Message from the office
+        phone:
+          type: string
+          description: Contact phone number
+        email:
+          type: string
+          format: email
+          description: Email address
+        pobox:
+          type: string
+          description: P.O. Box number
+      example:
+        name: Registrar Office
+        location: Main Campus
+        president: Dr. John Doe
+        msg: "Welcome to the Registrar Office"
+        phone: "+251-912-345-678"
+        email: registrar@dmu.edu.et
+        pobox: "1234"
+    
+
+    Presidents:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Full name of the president
+        startDate:
+          type: string
+          format: date
+          description: Date the presidency started
+        endDate:
+          type: string
+          format: date
+          description: Date the presidency ended
+        description:
+          type: string
+          description: Summary or biography
+        img:
+          type: string
+          format: uri
+          description: URL to the president's image
+      example:
+        name: Dr. Jane Doe
+        startDate: 2019-01-01
+        endDate: 2023-01-01
+        description: Served as the university's president with distinction.
+
+
+    Programs:
+      type: object
+      required:
+        - name
+        - type
+        - dept
+      properties:
+        name:
+          type: string
+          description: Name of the academic program
+        type:
+          type: string
+          enum: [BSc, MSc, PhD]
+          description: Type of the program (e.g., BSc, MSc, or PhD)
+        dept:
+          type: string
+          description: ID of the department the program belongs to
+      example:
+        name: Computer Science
+        type: BSc
+        dept: 60d21b4667d0d8992e610c85
+
+    Schools:
+      type: object
+      required:
+        - name
+        - college
+      properties:
+        name:
+          type: string
+          description: Name of the school
+        description:
+          type: string
+          description: Description of the school
+        mission:
+          type: string
+          description: School mission statement
+        vision:
+          type: string
+          description: School vision statement
+        location:
+          type: string
+          description: Location of the school
+        email:
+          type: string
+          format: email
+          description: Contact email
+        phone:
+          type: string
+          description: Contact phone number
+        college:
+          type: string
+          description: ID of the college the school belongs to
+      example:
+        name: School of Engineering
+        description: The engineering school of the university.
+        mission: To provide quality engineering education.
+        vision: To be a leader in engineering education.
+        location: Main Campus
+        email: engineering@university.edu
+        phone: "+123456789"
+        college: 60d21b4667d0d8992e610c85
+
+    Statistics:
+      type: object
+      required:
+        - name
+        - amount
+      properties:
+        name:
+          type: string
+          description: Name of the statistic
+        amount:
+          type: number
+          description: Numeric amount for the statistic
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+          default: active
+          description: Status of the statistic
+      example:
+        name: Total Students
+        amount: 15000
+        status: active
+
+  
+    

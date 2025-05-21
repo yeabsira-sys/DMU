@@ -15,7 +15,6 @@ const router = express.Router();
 
 //search for user USED TO FILTER USER
 
-
 /**
  * @swagger
  * /user/search:
@@ -72,7 +71,7 @@ router.get('/search', auditLogger('search for users'), getUserController)
 
 /**
  * @swagger
- * /user/create:
+ * /user:
  *   post:
  *     tags:
  *       - User
@@ -104,9 +103,6 @@ router.post('/', auditLogger('user creation'), validate(createUserSchema), creat
  *       - in: path
  *         name: id
  *         required: true
- *         schema:
- *           $ref: '#/components/schemas/getUserByID/properties/id'
- *         description: MongoDB ObjectId
  *     responses:
  *       200:
  *         description: User found successfully
@@ -126,12 +122,10 @@ router.get('/id/:id', auditLogger('get selective user'), getSingleUserByID)
  *     tags:
  *       - User
  *     summary: Get user details by email
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/getUserByEmail'
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
  *     responses:
  *       200:
  *         description: User found and returned successfully
@@ -150,12 +144,10 @@ router.get('/email/:email', auditLogger('get selective user'), getSingleUserByEm
  *     tags:
  *       - User
  *     summary: Get user details by phone number
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/getUserByPhone'
+ *     parameters:
+ *       - in: path
+ *         name: phone
+ *         required: true
  *     responses:
  *       200:
  *         description: User found and returned successfully
@@ -174,12 +166,10 @@ router.get('/phone/:phone', auditLogger('get selective user'), getSingleUserByPh
  *     tags:
  *       - User
  *     summary: Get user details by username
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/getUserByUserName'
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
  *     responses:
  *       200:
  *         description: User found and returned successfully
@@ -194,7 +184,7 @@ router.get('/username/:username', auditLogger('get selective user'), getSingleUs
 
 /**
  * @swagger
- * /user:
+ * /user/update:
  *   patch:
  *     tags:
  *       - User
@@ -270,7 +260,7 @@ router.put('/activate', auditLogger('user activation'), validate(suspendUserSche
 
 /**
  * @swagger
- * /user/delete:
+ * /user:
  *   delete:
  *     tags:
  *       - User
