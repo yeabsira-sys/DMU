@@ -13,10 +13,11 @@ export const createCampus = async (req, res) => {
   try {
         if(req.user?.role !== 'admin' && req.user?.role !== 'cda') return res.status(401).json({message: 'un authorize'})
     const { name, description } = req.body;
-    const imageFilePath = path.join(__dirname, "imagefile.json")
+    const imageFilePath = path.join("imagefile.json")
             let images
             console.log(imageFilePath)
           if( await fileExists(imageFilePath)){
+            const imageData = await fs.readFile('imagefile.json', 'utf8')
             images = JSON.parse(imageData);
             await fs.unlink(imageFilePath);
           }
@@ -63,9 +64,10 @@ export const updateCampus = async (req, res) => {
     name? updatedCampusData.name = name : ''
     description? updatedCampusData.description = description : ''
         if (imageChanged) {
-          const imageFilePath = path.join(__dirname, "imagefile.json")
+          const imageFilePath = path.join("imagefile.json")
             let images
           if( await fileExists(imageFilePath)){
+            const imageData = await fs.readFile('imagefile.json', 'utf-8')
             images = JSON.parse(imageData);
             await fs.unlink(imageFilePath);
           }
@@ -79,8 +81,8 @@ export const updateCampus = async (req, res) => {
             images: newImage,
           };
     
-          const updatedCampus = await News.findByIdAndUpdate(
-            { _id: new ObjectId(_id) },
+          const updatedCampus = await Campuses.findByIdAndUpdate(
+            { _id: new ObjectId(id) },
             {
               $set: updatedCampusData,
             },
@@ -88,7 +90,7 @@ export const updateCampus = async (req, res) => {
           );
     
           if (!updatedCampus) {
-            return res.status(400).json({ message: "news could not be updated" });
+            return res.status(400).json({ message: "campus could not be updated" });
           }
           await deleteFiles(imageIds);
           return res.status(200).json({
@@ -98,8 +100,8 @@ export const updateCampus = async (req, res) => {
           // console.log(images);
          
         } else {
-          const updatedCampus = await News.findByIdAndUpdate(
-            { _id: new ObjectId(_id) },
+          const updatedCampus = await Campuses.findByIdAndUpdate(
+            { _id: new ObjectId(id) },
             {
               $set: updatedCampusData,
             },
@@ -107,7 +109,7 @@ export const updateCampus = async (req, res) => {
           );
     
           if (!updatedCampus) {
-            return res.status(400).json({ message: "news could not be updated" });
+            return res.status(400).json({ message: "campuses could not be updated" });
           }
           res.status(200).json({
             payload: updatedCampus,
@@ -135,7 +137,7 @@ export const deleteCampus = async (req, res) => {
           const returnVal = await deleteFiles(imagesId)
           if(!returnVal) return res.status(400).json({message: 'campuses cant be deleted'})
     
-            const deleted = await Campuses.findOneAndDelete({_id: new ObjectId(_id)})
+            const deleted = await Campuses.findOneAndDelete({_id: new ObjectId(id)})
             if(!deleted) return res.status(400).json({message: 'campuses could not be deleted'})
               res.sendStatus(200);
       } catch (err) {

@@ -68,7 +68,7 @@ export const newsPostController = async (req, res, next) => {
 export const filterNews = async (req, res) => {
   try {
     const { title, author, fromDate, toDate, page = 1, limit = 10, description } = req.query;
-    const filter = {};
+    let filter = {};
 
     if (title) {
       filter.title = { $regex: title, $options: "i" };
@@ -116,7 +116,7 @@ export const filterNews = async (req, res) => {
 };
 
 export const filterNewsAdmin = async (req, res) => {
-  verifyAdminOrCDA(req, res, next)
+   if(!req.user.role == 'cda') return res.status(403).json({message: 'forbidden'})
   try {
     const {
       title,
@@ -282,7 +282,7 @@ export const updateNews = async (req, res) => {
     const { imageNames, imageChanged, formerImages, imageIds } = req.body;
     console.log(updatedData);
     if (imageChanged) {
-      const imageFilePath = path.join(__dirname, "imagefile.json")
+      const imageFilePath = path.join("imagefile.json")
         let images
         console.log(images)
       if( await fileExists(imageFilePath)){
@@ -291,10 +291,11 @@ export const updateNews = async (req, res) => {
         await fs.unlink(imageFilePath);
       }
       else{
+        console.log(imageFilePath, 'no image')
         images = []
       }
            const newImage = await removeMatchIds(imageIds, formerImages, images);
-      // console.log(newImage)
+       console.log(newImage)
       updatedData = {
         ...updatedData,
         images: newImage,
@@ -392,7 +393,7 @@ export const deleteNews = async (req, res) => {
   }
 };
 export const hideNews = async (req, res) => {
-  if(req.user?.role !== 'cda' || req.user?.role !== 'admin') return res.status(403).json({message: 'forbidden'})
+  if(req.user?.role !== 'cda' && req.user?.role !== 'admin') return res.status(403).json({message: 'forbidden'})
   try {
     const { _id } = req.params;
     const news = await News.findOne({_id: new ObjectId(_id)})

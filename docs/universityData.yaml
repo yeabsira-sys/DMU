@@ -33,10 +33,6 @@ components:
         description:
           type: string
           description: A short description of the campus
-        img:
-          type: string
-          format: uri
-          description: Image URL of the campus
         isHidden:
           type: boolean
           example: false
@@ -72,13 +68,68 @@ components:
         description:
           type: string
           description: Description of the campus life topic
-        img:
-          type: string
-          format: uri
-          description: Image URL representing the topic
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
       example:
         name: Sports Activities
         description: Wide range of sports and recreational activities
+
+
+    updateCampusLife:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Title of the campus life content
+        description:
+          type: string
+          description: Description of the campus life topic
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
 
     College:
       type: object
@@ -99,13 +150,54 @@ components:
           type: string
           format: objectId
           description: Reference to the campus ID
+    editCollege:
+      type: object
+      required:
+        - name
+        - campus
+      properties:
+        name:
+          type: string
+          description: Name of the college
+        description:
+          type: string
+          description: Description of the college
+        location:
+          type: string
+          description: Physical location of the college
+        campus:
+          type: string
+          format: objectId
+          description: Reference to the campus ID
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
       example:
         name: College of Natural Sciences
         description: Offers programs in Physics, Chemistry, and Biology
         location: North Campus
         campus: 60d21b4667d0d8992e610c85
     
-
     Department:
       type: object
       required:
@@ -122,12 +214,50 @@ components:
           type: string
           format: objectId
           description: Reference to the associated school
+    editDepartment:
+      type: object
+      required:
+        - name
+        - school
+      properties:
+        name:
+          type: string
+          description: Name of the department
+        description:
+          type: string
+          description: Description of the department
+        school:
+          type: string
+          format: objectId
+          description: Reference to the associated school
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
       example:
         name: Department of Computer Science
-        desc: Focuses on programming, algorithms, and software engineering
+        description: Focuses on programming, algorithms, and software engineering
         school: 60d21b4667d0d8992e610c99
   
-    
     Office:
       type: object
       required:
@@ -155,6 +285,56 @@ components:
         pobox:
           type: string
           description: P.O. Box number
+    editOffice:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the office
+        location:
+          type: string
+          description: Location of the office
+        president:
+          type: string
+          description: President or head of the office
+        msg:
+          type: string
+          description: Message from the office
+        phone:
+          type: string
+          description: Contact phone number
+        email:
+          type: string
+          format: email
+          description: Email address
+        pobox:
+          type: string
+          description: P.O. Box number
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
       example:
         name: Registrar Office
         location: Main Campus
@@ -164,7 +344,6 @@ components:
         email: registrar@dmu.edu.et
         pobox: "1234"
     
-
     Presidents:
       type: object
       required:
@@ -184,16 +363,53 @@ components:
         description:
           type: string
           description: Summary or biography
-        img:
+    editPresidents:
+      type: object
+      required:
+        - name
+      properties:
+        name:
           type: string
-          format: uri
-          description: URL to the president's image
+          description: Full name of the president
+        startDate:
+          type: string
+          format: date
+          description: Date the presidency started
+        endDate:
+          type: string
+          format: date
+          description: Date the presidency ended
+        description:
+          type: string
+          description: Summary or biography
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
       example:
         name: Dr. Jane Doe
         startDate: 2019-01-01
         endDate: 2023-01-01
         description: Served as the university's president with distinction.
-
 
     Programs:
       type: object
@@ -209,14 +425,53 @@ components:
           type: string
           enum: [BSc, MSc, PhD]
           description: Type of the program (e.g., BSc, MSc, or PhD)
-        dept:
+        department:
           type: string
           description: ID of the department the program belongs to
+    editPrograms:
+      type: object
+      required:
+        - name
+        - type
+        - dept
+      properties:
+        name:
+          type: string
+          description: Name of the academic program
+        type:
+          type: string
+          enum: [BSc, MSc, PhD]
+          description: Type of the program (e.g., BSc, MSc, or PhD)
+        department:
+          type: string
+          description: ID of the department the program belongs to
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
       example:
         name: Computer Science
         type: BSc
         dept: 60d21b4667d0d8992e610c85
-
     Schools:
       type: object
       required:
@@ -248,6 +503,60 @@ components:
         college:
           type: string
           description: ID of the college the school belongs to
+    editSchools:
+      type: object
+      required:
+        - name
+        - college
+      properties:
+        name:
+          type: string
+          description: Name of the school
+        description:
+          type: string
+          description: Description of the school
+        mission:
+          type: string
+          description: School mission statement
+        vision:
+          type: string
+          description: School vision statement
+        location:
+          type: string
+          description: Location of the school
+        email:
+          type: string
+          format: email
+          description: Contact email
+        phone:
+          type: string
+          description: Contact phone number
+        college:
+          type: string
+          description: ID of the college the school belongs to
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
       example:
         name: School of Engineering
         description: The engineering school of the university.
@@ -277,6 +586,49 @@ components:
             - inactive
           default: active
           description: Status of the statistic
+
+    editStatistics:
+      type: object
+      required:
+        - name
+        - amount
+      properties:
+        name:
+          type: string
+          description: Name of the statistic
+        amount:
+          type: number
+          description: Numeric amount for the statistic
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+          default: active
+          description: Status of the statistic
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
       example:
         name: Total Students
         amount: 15000

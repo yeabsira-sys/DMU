@@ -286,7 +286,7 @@ adminNewsRouter.patch("/:_id", auditLogger('updating news'), validate(editNewsVa
  *       403:
  *         description: forbidden attempt
  */
-adminNewsRouter.put('/hide', auditLogger('hide news'), validateObjectId(objectIdValidation), hideNews)
+adminNewsRouter.put('/hide/:_id', auditLogger('hide news'), validateObjectId(objectIdValidation), hideNews)
 // delete news
 
 

@@ -1,6 +1,6 @@
 import express from 'express'
 import { validate } from '../../middlewares/validate.mjs';
-import { admissionSchema } from '../../validations/admissionSchema.mjs';
+import { admissionSchema, editAdmissionSchema } from '../../validations/admissionSchema.mjs';
 import { auditLogger } from '../../middlewares/auditLoger.mjs';
 import {
   createAdmission,
@@ -165,7 +165,7 @@ adminAdmissionRouter.get('/', getAllAdmissions);
  *         description: Program not found
  */
 
-adminAdmissionRouter.patch('/:_id',validateObjectId(objectIdValidation), auditLogger('admission programs changes'), validate(admissionSchema), updateAdmission);
+adminAdmissionRouter.patch('/:_id',validateObjectId(objectIdValidation), auditLogger('admission programs changes'), validate(editAdmissionSchema), updateAdmission);
 
 /** 
  *@swagger

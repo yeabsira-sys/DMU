@@ -35,9 +35,9 @@ let admissionData = {
 };
         
 
-   const imageFilePath = path.join(__dirname, "imagefile.json")
+   const imageFilePath = path.join("imagefile.json")
         let images
-      if( await fileExists(imageFilePath)){
+      if( await fileExists(imageFilePath)){            const imageData = await fs.readFile("imagefile.json", "utf-8");
         images = JSON.parse(imageData);
         await fs.unlink(imageFilePath);
       }
@@ -118,9 +118,10 @@ export const updateAdmission = async (req, res) => {
     }
     const { imageNames, imageChanged, formerImages, imageIds } = req.body;
     if (imageChanged) {
-      const imageFilePath = path.join(__dirname, "imagefile.json")
+      const imageFilePath = path.join("imagefile.json")
         let images
       if( await fileExists(imageFilePath)){
+        const imageData = await fs.readFile('imageFile.json', 'utf-8')
         images = JSON.parse(imageData);
         await fs.unlink(imageFilePath);
       }
@@ -134,7 +135,7 @@ export const updateAdmission = async (req, res) => {
         images: newImage,
       };
 
-      const updatedAdmission = await News.findByIdAndUpdate(
+      const updatedAdmission = await Admission.findByIdAndUpdate(
         { _id: id},
         {
           $set: admission,
@@ -155,7 +156,7 @@ export const updateAdmission = async (req, res) => {
     } else if (imageNames) {
       const changes = await changeMetadata(imageNames);
       console.log(changes)
-      if (changes.acknowledged == true) {
+      if (changes?.acknowledged == true) {
         for (let i = 0; i < imageNames.length; i++) {
           for (let j = 0; j < formerImages.length; j++) {
             if (imageNames[i].id == formerImages[j].id) {
@@ -163,9 +164,8 @@ export const updateAdmission = async (req, res) => {
             }
           }
         }
-        console.log(formerImages, 'former image')
           admission.images = formerImages
-        const updatedAdmission = await News.findByIdAndUpdate(
+        const updatedAdmission = await admission.findByIdAndUpdate(
           { _id: id },
           {
             $set: admission,
@@ -176,10 +176,10 @@ export const updateAdmission = async (req, res) => {
           return res
             .status(400)
             .json({ message: "news could not be updated!" });
-        res.status(200).json({ payload: updatedNews });
+        res.status(200).json({ payload: updatedAdmission });
       }
     } else {
-      const updatedAdmission = await News.findByIdAndUpdate(
+      const updatedAdmission = await Admission.findByIdAndUpdate(
         { _id: id },
         {
           $set: admission,
@@ -187,19 +187,13 @@ export const updateAdmission = async (req, res) => {
         { new: true }
       );
 
-      if (!updateAdmission) {
+      if (!updatedAdmission) {
         return res.status(400).json({ message: "news could not be updated" });
       }
       res.status(200).json({
         payload: updatedAdmission,
       });
     }
-
-    if (!updated) {
-      return res.status(404).json({ message: 'Admission program not found' });
-    }
-
-    res.status(200).json('updated');
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

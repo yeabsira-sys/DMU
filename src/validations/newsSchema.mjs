@@ -69,10 +69,5 @@ export const searchNewsValidationSchema = Joi.object({
   page: Joi.string().optional(),
   adminLoked: Joi.boolean().optional(),
   cdaLoked: Joi.boolean().optional(),
-  socialMediaPosted: Joi.array()
-    .items(Joi.string().valid('facebook', 'telegram'))
-    .messages({
-      'any.only': '{{#label}} must be either facebook or telegram',
-      'array.includes': '{{#label}} contains invalid platform'
-    }),
+  socialMediaPosted: Joi.string()
 })

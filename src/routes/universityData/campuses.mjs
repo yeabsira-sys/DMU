@@ -1,6 +1,6 @@
 import express from 'express';
 import { validate } from '../../middlewares/validate.mjs';
-import { campusSchema } from '../../validations/universityDataValidation.mjs';
+import { campusSchema, editCampusSchema } from '../../validations/universityDataValidation.mjs';
 import { createCampus, getAllCampuses, getCampusById, updateCampus, deleteCampus } from '../../controllers/universityDataController/campusesController.mjs';
 const adminCampusRouter = express.Router();
 const publicCampusRouter = express.Router();
@@ -110,7 +110,7 @@ publicCampusRouter.get('/:id', getCampusById);
  *       404:
  *         description: Campus not found
  */
-adminCampusRouter.patch('/:id', validate(campusSchema), updateCampus);
+adminCampusRouter.patch('/:id', validate(editCampusSchema), updateCampus);
 
 /**
  * @swagger
