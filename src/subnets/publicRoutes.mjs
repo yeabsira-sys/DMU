@@ -14,6 +14,6 @@ router.use('/auth/tokenrefresh', refreshTokenRoute)
 router.use('/news', publicNewsRouter)
 router.use('/admission', publicAdmissionRouter)
 router.use('file', publicFileRouter)
-
+router.use('file', publicFileRouter)
 
 export default router
