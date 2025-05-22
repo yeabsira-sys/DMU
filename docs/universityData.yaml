@@ -150,53 +150,77 @@ components:
           type: string
           format: objectId
           description: Reference to the campus ID
-    editCollege:
-      type: object
-      required:
-        - name
-        - campus
-      properties:
-        name:
-          type: string
-          description: Name of the college
-        description:
-          type: string
-          description: Description of the college
-        location:
-          type: string
-          description: Physical location of the college
-        campus:
-          type: string
-          format: objectId
-          description: Reference to the campus ID
         isHidden:
           type: boolean
-          example: false
-        imageChanged:
-          type: boolean
           example: true
-        imageIds:
-          type: array
-          items:
-            type: string
-        formerImages:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              uri:
-                type: string
-              name:
-                type: string
-              _id:
-                type: string
       example:
         name: College of Natural Sciences
         description: Offers programs in Physics, Chemistry, and Biology
         location: North Campus
         campus: 60d21b4667d0d8992e610c85
+
+    editColleges:
+        type: object
+        required:
+            - formerImages
+        properties:
+            name:
+                type: string
+                description: Name of the college
+            description:
+                type: string
+                description: Description of the college
+            location:
+                type: string
+                description: Physical location of the college
+            campus:
+                type: string
+                pattern: '^[a-fA-F0-9]{24}$'
+                description: Reference to the campus ID
+            isHidden:
+                type: boolean
+                example: false
+            imageChanged:
+                type: boolean
+                example: true
+            imageIds:
+                type: array
+                items:
+                    type: string
+                    description: GridFS file ID or similar
+            formerImages:
+                type: array
+                items:
+                    type: object
+                    properties:
+                        id:
+                            type: string
+                            description: Temporary identifier for the image (frontend use)
+                        uri:
+                            type: string
+                            description: Image URI or base64 string
+                        name:
+                            type: string
+                            description: Original name of the image file
+                        _id:
+                            type: string
+                            description: MongoDB ObjectId of the stored image
+        example:
+            name: College of Natural Sciences
+            description: Offers programs in Physics, Chemistry, and Biology
+            location: North Campus
+            campus: 60d21b4667d0d8992e610c85
+            isHidden: false
+            imageChanged: true
+            imageIds:
+                - 6633ab3a7a06b9627cd2b4b1
+            formerImages:
+                - id: temp123
+                  uri: /uploads/colleges/image1.jpg
+                  name: image1.jpg
+                  _id: 6633ab3a7a06b9627cd2b4b1
+
+
     
     Department:
       type: object
@@ -214,11 +238,11 @@ components:
           type: string
           format: objectId
           description: Reference to the associated school
+
+
     editDepartment:
       type: object
       required:
-        - name
-        - school
       properties:
         name:
           type: string

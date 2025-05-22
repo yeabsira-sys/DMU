@@ -113,6 +113,9 @@ components:
                 type: string
               _id:
                 type: string
+        imageChanged:
+          type: boolean
+          example: true
         adminLoked:
           type: boolean
           example: false
@@ -122,9 +125,6 @@ components:
         strong:
           type: boolean
           example: false
-        imageChanged:
-          type: boolean
-          example: true
     ObjectIdParam:
       type: object
       properties:

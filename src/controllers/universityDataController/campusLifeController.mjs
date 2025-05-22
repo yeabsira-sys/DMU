@@ -1,4 +1,4 @@
-import { Campuses } from "../../models/universityData/campuses.mjs";
+import { CampusLife } from "../../models/universityData/campusLife.mjs";
 import { ObjectId } from "mongodb";
 import fs from "fs/promises";
 import path from "path";
@@ -9,10 +9,10 @@ import { removeMatchIds } from "../../services/removeMatchIds.mjs";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-export const createCampus = async (req, res) => {
+export const createCampusLife = async (req, res) => {
   try {
         if(req.user?.role !== 'admin' && req.user?.role !== 'cda') return res.status(401).json({message: 'un authorize'})
-    const { name, description } = req.body;
+    const { name, description, isHidden } = req.body;
     const imageFilePath = path.join("imagefile.json")
             let images
             console.log(imageFilePath)
@@ -24,10 +24,10 @@ export const createCampus = async (req, res) => {
           else{
             images = []
           }
-    const campus = {
-        name, description, images
+    const campusLife = {
+        name, description, isHidden, images
     }
-    const newCampus = await Campuses.create(campus) 
+    const newCampus = await CampusLife.create(campusLife) 
     if(!newCampus) return res.status(400).json({message: 'campus could not created'})
     res.status(201).json({ message: 'Campus created', data: newCampus });
   } catch (error) {
@@ -35,35 +35,36 @@ export const createCampus = async (req, res) => {
   }
 }
 
-export const getAllCampuses = async (req, res) => {
+export const getAllCampusLife = async (req, res) => {
   try {
-   const campuses = await Campuses.find({ isHidden: { $ne: true }});
-   if(!campuses) return res.status(404).json({message: 'no campuses could be found'})
-    return res.status(200).json({payload: campuses})
+   const campusLifes = await CampusLife.find({ isHidden: { $ne: true }});
+   if(!campusLifes) return res.status(404).json({message: 'no campuses could be found'})
+    return res.status(200).json({payload: campusLifes})
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
 
-export const getCampusById = async (req, res) => {
+export const getCampusLifeById = async (req, res) => {
   try {
     const { id } = req.params;
-    const campus = await Campuses.findById({_id: new ObjectId(id)})
-    if(!campus) return res.status(404).json({message: `no campus could be found with id: ${id}`})
-   return res.status(200).json({payload: campus});
+    const campusLife = await CampusLife.findById({_id: new ObjectId(id)})
+    if(!campusLife) return res.status(404).json({message: `no campus could be found with id: ${id}`})
+   return res.status(200).json({payload: campusLife});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
 
-export const updateCampus = async (req, res) => {
+export const updateCampusLife = async (req, res) => {
   try {
     const { id } = req.params;
-    const { imageNames, imageChanged, formerImages, imageIds, name, description } = req.body;
-    let updatedCampusData = {}
-    name? updatedCampusData.name = name : ''
-    description? updatedCampusData.description = description : ''
-    updatedCampusData.updatedAt = new Date()
+    const { imageChanged, formerImages, imageIds, name, description, isHidden, } = req.body;
+    let updatedCampusLifeData = {}
+    name? updatedCampusLifeData.name = name : ''
+    description? updatedCampusLifeData.description = description : ''
+    updatedCampusLifeData.updatedAt = new Date();
+    isHidden !== null || isHidden !== undefined ? updatedCampusLifeData.isHidden = isHidden : ''
         if (imageChanged) {
           const imageFilePath = path.join("imagefile.json")
             let images
@@ -77,43 +78,43 @@ export const updateCampus = async (req, res) => {
           }
                const newImage = await removeMatchIds(imageIds, formerImages, images);
           // console.log(newImage)
-          updatedCampusData = {
-            ...updatedCampusData,
+          updatedCampusLifeData = {
+            ...updatedCampusLifeData,
             images: newImage,
           };
     
-          const updatedCampus = await Campuses.findByIdAndUpdate(
+          const updatedCampusLife = await CampusLife.findByIdAndUpdate(
             { _id: new ObjectId(id) },
             {
-              $set: updatedCampusData,
+              $set: updatedCampusLifeData,
             },
             { new: true }
           );
     
-          if (!updatedCampus) {
+          if (!updatedCampusLife) {
             return res.status(400).json({ message: "campus could not be updated" });
           }
           await deleteFiles(imageIds);
           return res.status(200).json({
-            payload: updatedCampus,
+            payload: updatedCampusLife,
           });
      
           // console.log(images);
          
         } else {
-          const updatedCampus = await Campuses.findByIdAndUpdate(
+          const updatedCampusLife = await CampusLife.findByIdAndUpdate(
             { _id: new ObjectId(id) },
             {
-              $set: updatedCampusData,
+              $set: updatedCampusLifeData,
             },
             { new: true }
           );
     
-          if (!updatedCampus) {
+          if (!updatedCampusLife) {
             return res.status(400).json({ message: "campuses could not be updated" });
           }
           res.status(200).json({
-            payload: updatedCampus,
+            payload: updatedCampusLife,
           });
         }
   } catch (error) {
@@ -121,12 +122,12 @@ export const updateCampus = async (req, res) => {
   }
 }
 
-export const deleteCampus = async (req, res) => {
+export const deleteCampuLife = async (req, res) => {
   try {
     if(req.user.role !== 'admin' && req.user.role !== 'cda') return res.sendStatus(401)
       try {
         const { id } = req.params;
-        const news = await Campuses.findOne({_id: new ObjectId(id)})
+        const news = await CampusLife.findOne({_id: new ObjectId(id)})
         if(!news) return res.status(404).json({message: `no campuses to be deleted with id ${id}`})
           const images = news.images
     
@@ -138,7 +139,7 @@ export const deleteCampus = async (req, res) => {
           const returnVal = await deleteFiles(imagesId)
           if(!returnVal) return res.status(400).json({message: 'campuses cant be deleted'})
     
-            const deleted = await Campuses.findOneAndDelete({_id: new ObjectId(id)})
+            const deleted = await CampusLife.findOneAndDelete({_id: new ObjectId(id)})
             if(!deleted) return res.status(400).json({message: 'campuses could not be deleted'})
               res.sendStatus(200);
       } catch (err) {

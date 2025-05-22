@@ -96,14 +96,14 @@ router.get('/:id', getDepartmentById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Department'
+ *             $ref: '#/components/schemas/editDepartment'
  *     responses:
  *       200:
  *         description: Department updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Department'
+ *               $ref: '#/components/schemas/editDepartment'
  *       404:
  *         description: Department not found
  */
@@ -129,50 +129,3 @@ router.patch('/:id', validate(departmentSchema), updateDepartment);
  *         description: Department not found
  */
 router.delete('/:id', deleteDepartment);
-
-// Controller stubs
-
-async function createDepartment(req, res) {
-  try {
-    res.status(201).json({ message: 'Department created', data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getAllDepartments(req, res) {
-  try {
-    res.status(200).json([]);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getDepartmentById(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function updateDepartment(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'Department updated', id, data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function deleteDepartment(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'Department deleted', id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-export default router;

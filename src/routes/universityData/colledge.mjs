@@ -1,8 +1,12 @@
 import express from 'express';
 import { validate } from '../../middlewares/validate.mjs';
-import { collegeSchema } from '../../validations/collegeValidation.mjs';
-
-const router = express.Router();
+import { collegeSchema, editCollegeSchema } from '../../validations/universityDataValidation.mjs';
+import  { auditLogger } from '../../middlewares/auditLoger.mjs'
+import { objectIdValidation } from '../../validations/objectIdValidation.mjs';
+import { validateObjectId } from '../../middlewares/validateObjectID.mjs';
+import { createCollege, getAllColleges, getCollegeById, updateCollege, deleteColledge } from '../../controllers/universityDataController/colledgeController.mjs'
+const adminColledgeRouter = express.Router();
+const publicColledgeRouter = express.Router();
 
 /**
  * @swagger
@@ -33,7 +37,7 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', validate(collegeSchema), createCollege);
+adminColledgeRouter.post('/', auditLogger('creating colleges'),  validate(collegeSchema), createCollege);
 
 /**
  * @swagger
@@ -49,9 +53,10 @@ router.post('/', validate(collegeSchema), createCollege);
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/College'
+ *                 $ref: '#/components/schemas/editColleges'
  */
-router.get('/', getAllColleges);
+adminColledgeRouter.get('/', auditLogger('fetching all colledges'), getAllColleges);
+publicColledgeRouter.get('/', getAllColleges);
 
 /**
  * @swagger
@@ -76,7 +81,8 @@ router.get('/', getAllColleges);
  *       404:
  *         description: College not found
  */
-router.get('/:id', getCollegeById);
+adminColledgeRouter.get('/:id', auditLogger('fetching single colledge by id'), validateObjectId(objectIdValidation),getCollegeById);
+publicColledgeRouter.get('/:id', auditLogger('fetching single colledge by id'), validateObjectId(objectIdValidation),getCollegeById);
 
 /**
  * @swagger
@@ -96,18 +102,14 @@ router.get('/:id', getCollegeById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/College'
+ *             $ref: '#/components/schemas/editColleges'
  *     responses:
  *       200:
  *         description: College updated
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/College'
  *       404:
  *         description: College not found
  */
-router.patch('/:id', validate(collegeSchema), updateCollege);
+adminColledgeRouter.patch('/:id', auditLogger('editing colledge collection'), validateObjectId(objectIdValidation),  validate(editCollegeSchema), updateCollege);
 
 /**
  * @swagger
@@ -128,51 +130,6 @@ router.patch('/:id', validate(collegeSchema), updateCollege);
  *       404:
  *         description: College not found
  */
-router.delete('/:id', deleteCollege);
+adminColledgeRouter.delete('/:id', auditLogger('deleting colledge collection'), validateObjectId(objectIdValidation), deleteColledge);
 
-// Controller stubs
-
-async function createCollege(req, res) {
-  try {
-    res.status(201).json({ message: 'College created', data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getAllColleges(req, res) {
-  try {
-    res.status(200).json([]);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getCollegeById(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function updateCollege(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'College updated', id, data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function deleteCollege(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'College deleted', id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-export default router;
+export { adminColledgeRouter, publicColledgeRouter }
