@@ -8,7 +8,7 @@ import { publicFileRouter } from '../routes/fileRoute/imagesRoutes.mjs'
 import { publicCampusLifeRouter } from '../routes/universityData/campusLife.mjs'
 import { publicCampusRouter } from '../routes/universityData/campuses.mjs'
 import { publicColledgeRouter } from '../routes/universityData/colledge.mjs'
-
+import { publicDeparmentRouter } from '../routes/universityData/department.mjs'
 const router = express.Router()
 
 router.use('/auth', authenticatonRoutes)
@@ -20,6 +20,7 @@ router.use('/file', publicFileRouter)
 router.use('/campuses', publicCampusRouter)
 router.use('/campusLife', publicCampusLifeRouter)
 router.use('/college', publicColledgeRouter)
+router.use('/department', publicDeparmentRouter)
 
 
 export default router

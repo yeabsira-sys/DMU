@@ -10,6 +10,7 @@ import {adminAdmissionRouter} from '../routes/admissions/admissionRoutes.mjs'
 import { adminCampusRouter } from '../routes/universityData/campuses.mjs'
 import { adminCampusLifeRouter } from '../routes/universityData/campusLife.mjs'
 import { adminColledgeRouter } from '../routes/universityData/colledge.mjs'
+import { adminDepartmentRouter } from '../routes/universityData/department.mjs'
 
 
 const router = express.Router()
@@ -24,6 +25,7 @@ router.use('/admission', adminAdmissionRouter)
 router.use('/campuses', adminCampusRouter)
 router.use('/campusLife', adminCampusLifeRouter)
 router.use('/college', adminColledgeRouter)
+router.use('/department', adminDepartmentRouter)
 
 
 

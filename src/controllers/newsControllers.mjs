@@ -371,7 +371,7 @@ export const updateNews = async (req, res) => {
 export const deleteNews = async (req, res) => {
   if(req.user.role !== 'admin' && req.user.role !== 'cda') return res.sendStatus(401)
   try {
-    const { _id } = req.params;
+    const  _id  = req.params?._id || req.params?.id
     const news = await News.findOne({_id: new ObjectId(_id)})
     if(!news) return res.status(404).json({message: `no news to be deleted with id ${_id}`})
       const images = news.images

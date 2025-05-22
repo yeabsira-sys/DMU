@@ -145,6 +145,8 @@ export const departmentSchema = Joi.object({
     .messages({
       'any.required': 'School reference is required',
     }),
+    isHidden: Joi.boolean(),
+
 });
 export const editDepartmentSchema = Joi.object({
   name: Joi.string().optional().messages({
@@ -166,8 +168,8 @@ export const editDepartmentSchema = Joi.object({
       'any.required': 'School reference is required',
     }),
     isHidden: Joi.boolean(),
-        imageIds: Joi.array().items(Joi.string().optional()),
-        formerImages: Joi.array().items(
+    imageIds: Joi.array().items(Joi.string().optional()),
+    formerImages: Joi.array().items(
           Joi.object({
             id: Joi.string().required(),
             uri: Joi.string().required(),
@@ -190,7 +192,9 @@ export const officeSchema = Joi.object({
     'string.pattern.base': 'Phone must contain only digits and symbols like +, -, (, )',
   }),
   email: Joi.string().email().allow('', null),
-  pobox: Joi.string().allow('', null)
+  pobox: Joi.string().allow('', null),
+  isHidden: Joi.boolean(),
+
 });
 export const editOfficeSchema = Joi.object({
   name: Joi.string().optional().messages({
@@ -226,6 +230,7 @@ export const presidentSchema = Joi.object({
   startDate: Joi.date().iso().allow(null),
   endDate: Joi.date().iso().allow(null),
   description: Joi.string().allow('', null),
+    isHidden: Joi.boolean(),
 });
 export const editPresidentSchema = Joi.object({
   name: Joi.string().optional().messages({
@@ -262,7 +267,8 @@ export const programSchema = Joi.object({
   department: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().messages({
     'any.required': 'Department reference is required',
     'string.pattern.base': 'Invalid department ID format'
-  })
+  }),
+    isHidden: Joi.boolean(),
 });
 
 export const editProgramSchema = Joi.object({
@@ -303,7 +309,8 @@ export const schoolSchema = Joi.object({
   location: Joi.string().allow('', null),
   email: Joi.string().email().allow('', null),
   phone: Joi.string().allow('', null),
-  college: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().messages({
+    isHidden: Joi.boolean(),
+  college: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().messages({
     'any.required': 'College reference is required',
     'string.pattern.base': 'Invalid college ID format'
   })
@@ -376,3 +383,8 @@ export const editStatisticsSchema = Joi.object({
         ).required(),
   imageChanged: Joi.boolean().optional()
 });
+
+export const validateSubscriber = Joi.object({
+  email: Joi.string().email().required(),
+  status: Joi.string().valid('active', 'inactive')
+})

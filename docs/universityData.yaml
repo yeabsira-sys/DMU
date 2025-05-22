@@ -1,5 +1,7 @@
 components:
   schemas:
+
+    # ===================== Campus =====================
     Campuses:
       type: object
       required:
@@ -56,7 +58,8 @@ components:
                 type: string
               _id:
                 type: string
-        # campusLife
+
+    # ===================== Campus Life =====================
     CampusLife:
       type: object
       required:
@@ -95,7 +98,6 @@ components:
         name: Sports Activities
         description: Wide range of sports and recreational activities
 
-
     updateCampusLife:
       type: object
       required:
@@ -131,6 +133,7 @@ components:
               _id:
                 type: string
 
+    # ===================== College =====================
     College:
       type: object
       required:
@@ -160,68 +163,67 @@ components:
         campus: 60d21b4667d0d8992e610c85
 
     editColleges:
-        type: object
-        required:
-            - formerImages
-        properties:
-            name:
+      type: object
+      required:
+        - formerImages
+      properties:
+        name:
+          type: string
+          description: Name of the college
+        description:
+          type: string
+          description: Description of the college
+        location:
+          type: string
+          description: Physical location of the college
+        campus:
+          type: string
+          pattern: '^[a-fA-F0-9]{24}$'
+          description: Reference to the campus ID
+        isHidden:
+          type: boolean
+          example: false
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+            description: GridFS file ID or similar
+        formerImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
                 type: string
-                description: Name of the college
-            description:
+                description: Temporary identifier for the image (frontend use)
+              uri:
                 type: string
-                description: Description of the college
-            location:
+                description: Image URI or base64 string
+              name:
                 type: string
-                description: Physical location of the college
-            campus:
+                description: Original name of the image file
+              _id:
                 type: string
-                pattern: '^[a-fA-F0-9]{24}$'
-                description: Reference to the campus ID
-            isHidden:
-                type: boolean
-                example: false
-            imageChanged:
-                type: boolean
-                example: true
-            imageIds:
-                type: array
-                items:
-                    type: string
-                    description: GridFS file ID or similar
-            formerImages:
-                type: array
-                items:
-                    type: object
-                    properties:
-                        id:
-                            type: string
-                            description: Temporary identifier for the image (frontend use)
-                        uri:
-                            type: string
-                            description: Image URI or base64 string
-                        name:
-                            type: string
-                            description: Original name of the image file
-                        _id:
-                            type: string
-                            description: MongoDB ObjectId of the stored image
-        example:
-            name: College of Natural Sciences
-            description: Offers programs in Physics, Chemistry, and Biology
-            location: North Campus
-            campus: 60d21b4667d0d8992e610c85
-            isHidden: false
-            imageChanged: true
-            imageIds:
-                - 6633ab3a7a06b9627cd2b4b1
-            formerImages:
-                - id: temp123
-                  uri: /uploads/colleges/image1.jpg
-                  name: image1.jpg
-                  _id: 6633ab3a7a06b9627cd2b4b1
+                description: MongoDB ObjectId of the stored image
+      example:
+        name: College of Natural Sciences
+        description: Offers programs in Physics, Chemistry, and Biology
+        location: North Campus
+        campus: 60d21b4667d0d8992e610c85
+        isHidden: false
+        imageChanged: true
+        imageIds:
+          - 6633ab3a7a06b9627cd2b4b1
+        formerImages:
+          - id: temp123
+            uri: /uploads/colleges/image1.jpg
+            name: image1.jpg
+            _id: 6633ab3a7a06b9627cd2b4b1
 
-
-    
+    # ===================== Department =====================
     Department:
       type: object
       required:
@@ -238,11 +240,20 @@ components:
           type: string
           format: objectId
           description: Reference to the associated school
-
-
+        isHidden: 
+          type: string
+          description: will the post shown or not
+      example:
+        name: Department of Computer Science
+        description: Focuses on programming, algorithms, and software engineering
+        school: 60d21b4667d0d8992e610c99
+        isHidden: true
+    
     editDepartment:
       type: object
       required:
+        - imageChanged
+        - formerImages
       properties:
         name:
           type: string
@@ -277,11 +288,9 @@ components:
                 type: string
               _id:
                 type: string
-      example:
-        name: Department of Computer Science
-        description: Focuses on programming, algorithms, and software engineering
-        school: 60d21b4667d0d8992e610c99
-  
+    
+
+    # ===================== Office =====================
     Office:
       type: object
       required:
@@ -309,6 +318,18 @@ components:
         pobox:
           type: string
           description: P.O. Box number
+        isHidden:
+          type: boolean
+          example: false
+      example:
+        name: Registrar Office
+        location: Main Campus
+        president: Dr. John Doe
+        msg: "Welcome to the Registrar Office"
+        phone: "+251-912-345-678"
+        email: registrar@dmu.edu.et
+        pobox: "1234"
+
     editOffice:
       type: object
       required:
@@ -359,15 +380,8 @@ components:
                 type: string
               _id:
                 type: string
-      example:
-        name: Registrar Office
-        location: Main Campus
-        president: Dr. John Doe
-        msg: "Welcome to the Registrar Office"
-        phone: "+251-912-345-678"
-        email: registrar@dmu.edu.et
-        pobox: "1234"
-    
+
+    # ===================== Presidents =====================
     Presidents:
       type: object
       required:
@@ -387,6 +401,15 @@ components:
         description:
           type: string
           description: Summary or biography
+        isHidden:
+          type: boolean
+          description: will the post shown
+      example:
+        name: Dr. Jane Doe
+        startDate: 2019-01-01
+        endDate: 2023-01-01
+        description: Served as the university's president with distinction.
+
     editPresidents:
       type: object
       required:
@@ -429,18 +452,14 @@ components:
                 type: string
               _id:
                 type: string
-      example:
-        name: Dr. Jane Doe
-        startDate: 2019-01-01
-        endDate: 2023-01-01
-        description: Served as the university's president with distinction.
 
+    # ===================== Programs =====================
     Programs:
       type: object
       required:
         - name
         - type
-        - dept
+        - department
       properties:
         name:
           type: string
@@ -452,12 +471,16 @@ components:
         department:
           type: string
           description: ID of the department the program belongs to
+        isHidden:
+          type: boolean
+          example: false
+
     editPrograms:
       type: object
       required:
         - name
         - type
-        - dept
+        - department
       properties:
         name:
           type: string
@@ -492,10 +515,7 @@ components:
                 type: string
               _id:
                 type: string
-      example:
-        name: Computer Science
-        type: BSc
-        dept: 60d21b4667d0d8992e610c85
+    # ===================== School =====================
     Schools:
       type: object
       required:
@@ -527,6 +547,18 @@ components:
         college:
           type: string
           description: ID of the college the school belongs to
+        isHidden:
+          type: boolean
+          example: false
+      example:
+        name: School of Engineering
+        description: The engineering school of the university.
+        mission: To provide quality engineering education.
+        vision: To be a leader in engineering education.
+        location: Main Campus
+        email: engineering@university.edu
+        phone: "+123456789"
+        college: 60d21b4667d0d8992e610c85
     editSchools:
       type: object
       required:
@@ -581,37 +613,10 @@ components:
                 type: string
               _id:
                 type: string
-      example:
-        name: School of Engineering
-        description: The engineering school of the university.
-        mission: To provide quality engineering education.
-        vision: To be a leader in engineering education.
-        location: Main Campus
-        email: engineering@university.edu
-        phone: "+123456789"
-        college: 60d21b4667d0d8992e610c85
 
+
+    # ===================== Statistics =====================
     Statistics:
-      type: object
-      required:
-        - name
-        - amount
-      properties:
-        name:
-          type: string
-          description: Name of the statistic
-        amount:
-          type: number
-          description: Numeric amount for the statistic
-        status:
-          type: string
-          enum:
-            - active
-            - inactive
-          default: active
-          description: Status of the statistic
-
-    editStatistics:
       type: object
       required:
         - name
@@ -633,30 +638,3 @@ components:
         isHidden:
           type: boolean
           example: false
-        imageChanged:
-          type: boolean
-          example: true
-        imageIds:
-          type: array
-          items:
-            type: string
-        formerImages:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              uri:
-                type: string
-              name:
-                type: string
-              _id:
-                type: string
-      example:
-        name: Total Students
-        amount: 15000
-        status: active
-
-  
-    

@@ -36,7 +36,7 @@ export const createCollege = async (req, res) => {
             images = []
           }
     const colledge = {
-        name, description, campus, location, isHidden
+        name, description, campus, location, isHidden, images
     }
     const newColledge = await Colledge.create(colledge) 
     if(!newColledge) return res.status(400).json({message: 'colledge could not created'})
