@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename)
 export const createCampus = async (req, res) => {
   try {
         if(req.user?.role !== 'admin' && req.user?.role !== 'cda') return res.status(401).json({message: 'un authorize'})
-    const { name, description } = req.body;
+    const { name, description, isHidden } = req.body;
     const imageFilePath = path.join("imagefile.json")
             let images
             console.log(imageFilePath)
@@ -25,7 +25,7 @@ export const createCampus = async (req, res) => {
             images = []
           }
     const campus = {
-        name, description, images
+        name, description, images, isHidden
     }
     const newCampus = await Campuses.create(campus) 
     if(!newCampus) return res.status(400).json({message: 'campus could not created'})

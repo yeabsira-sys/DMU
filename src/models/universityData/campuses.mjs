@@ -2,7 +2,7 @@ import { mongoose } from "../../config/db.mjs";
 
 const campusSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  desc: { type: String },
+  description: { type: String },
   isHidden: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: null },
