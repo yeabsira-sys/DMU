@@ -1,8 +1,7 @@
 import {  bucket} from '../config/fileStream.mjs'
 import { Readable } from 'stream';
 import fs from 'fs/promises'
-import dotenv from "dotenv"
-
+import dotenv from 'dotenv'
 dotenv.config()
 
 // upload files/ images
@@ -32,7 +31,7 @@ export const uploadFile = async (req, res, next) => {
             imageRefs.push(
               {
                id: uploadStream.id,
-               uri: `http://localhost:${process.env.PORT}/file/image/ + uploadStream.id`,
+               uri: `http://localhost:${process.env.PORT}/file/image/` + uploadStream.id,
                name: file.originalname
               }
             );

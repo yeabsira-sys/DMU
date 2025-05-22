@@ -1,8 +1,13 @@
 import express from 'express';
 import { validate } from '../../middlewares/validate.mjs';
-import { campusLifeSchema } from '../../validations/campusLifeValidation.mjs';
+import { campusLifeSchema, editCampusLifeSchema } from '../../validations/universityDataValidation.mjs';
+import { auditLogger } from '../../middlewares/auditLoger.mjs';
+import { objectIdValidation } from '../../validations/objectIdValidation.mjs';
+import { validateObjectId } from '../../middlewares/validateObjectID.mjs';
+import { createCampusLife, getAllCampusLife, getCampusLifeById, updateCampusLife, deleteCampuLife } from '../../controllers/universityDataController/campusLifeController.mjs';
 
-const router = express.Router();
+const adminCampusLifeRouter = express.Router();
+const publicCampusLifeRouter = express.Router();
 
 /**
  * @swagger
@@ -13,7 +18,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /campus-life:
+ * /campusLife:
  *   post:
  *     summary: Create a new campus life entry
  *     tags: [CampusLife]
@@ -33,11 +38,11 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', validate(campusLifeSchema), createCampusLife);
+adminCampusLifeRouter.post('/', auditLogger('creating campus life post'),  validate(campusLifeSchema), createCampusLife);
 
 /**
  * @swagger
- * /campus-life:
+ * /campusLife:
  *   get:
  *     summary: Get all campus life entries
  *     tags: [CampusLife]
@@ -51,11 +56,12 @@ router.post('/', validate(campusLifeSchema), createCampusLife);
  *               items:
  *                 $ref: '#/components/schemas/CampusLife'
  */
-router.get('/', getAllCampusLife);
+adminCampusLifeRouter.get('/', auditLogger('fetching all campus life posts'), getAllCampusLife);
+publicCampusLifeRouter.get('/', getAllCampusLife);
 
 /**
  * @swagger
- * /campus-life/{id}:
+ * /campusLife/{id}:
  *   get:
  *     summary: Get a campus life entry by ID
  *     tags: [CampusLife]
@@ -76,11 +82,12 @@ router.get('/', getAllCampusLife);
  *       404:
  *         description: Campus life entry not found
  */
-router.get('/:id', getCampusLifeById);
+adminCampusLifeRouter.get('/:id', auditLogger('fetching single campus life post'), validateObjectId(objectIdValidation),  getCampusLifeById);
+publicCampusLifeRouter.get('/:id', getCampusLifeById);
 
 /**
  * @swagger
- * /campus-life/{id}:
+ * /campusLife/{id}:
  *   patch:
  *     summary: Update a campus life entry
  *     tags: [CampusLife]
@@ -96,7 +103,7 @@ router.get('/:id', getCampusLifeById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CampusLife'
+ *             $ref: '#/components/schemas/updateCampusLife'
  *     responses:
  *       200:
  *         description: Campus life updated
@@ -107,11 +114,11 @@ router.get('/:id', getCampusLifeById);
  *       404:
  *         description: Campus life entry not found
  */
-router.patch('/:id', validate(campusLifeSchema), updateCampusLife);
+adminCampusLifeRouter.patch('/:id', auditLogger('updating campus life post'), validateObjectId(objectIdValidation), validate(editCampusLifeSchema), updateCampusLife);
 
 /**
  * @swagger
- * /campus-life/{id}:
+ * /campusLife/{id}:
  *   delete:
  *     summary: Delete a campus life entry
  *     tags: [CampusLife]
@@ -128,51 +135,7 @@ router.patch('/:id', validate(campusLifeSchema), updateCampusLife);
  *       404:
  *         description: Campus life entry not found
  */
-router.delete('/:id', deleteCampusLife);
+adminCampusLifeRouter.delete('/:id', auditLogger('deleting single campus life record/post'), validateObjectId(objectIdValidation), deleteCampuLife)
 
-// Controller stubs
 
-async function createCampusLife(req, res) {
-  try {
-    res.status(201).json({ message: 'Campus life created', data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getAllCampusLife(req, res) {
-  try {
-    res.status(200).json([]); 
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getCampusLifeById(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function updateCampusLife(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'Campus life updated', id, data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function deleteCampusLife(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'Campus life deleted', id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-export default router;
+export { adminCampusLifeRouter, publicCampusLifeRouter}

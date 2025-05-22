@@ -8,6 +8,10 @@ import  {adminNewsRouter}  from '../routes/news/newsRoutes.mjs'
 import { adminFileRouter } from '../routes/fileRoute/imagesRoutes.mjs'
 import {adminAdmissionRouter} from '../routes/admissions/admissionRoutes.mjs'
 import { adminCampusRouter } from '../routes/universityData/campuses.mjs'
+import { adminCampusLifeRouter } from '../routes/universityData/campusLife.mjs'
+import { adminColledgeRouter } from '../routes/universityData/colledge.mjs'
+
+
 const router = express.Router()
 router.use(verifyJWT)
 router.use(verifyAdmin)
@@ -18,6 +22,8 @@ router.use('/file', adminFileRouter)
 router.use('/news', adminNewsRouter)
 router.use('/admission', adminAdmissionRouter)
 router.use('/campuses', adminCampusRouter)
+router.use('/campusLife', adminCampusLifeRouter)
+router.use('/college', adminColledgeRouter)
 
 
 

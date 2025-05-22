@@ -57,9 +57,9 @@ const publicFileRouter = express.Router()
 adminFileRouter.post('/news/image', upload.array('images'),  validateImageData(imageValidation), uploadFile );
 
 // get image by id
-publicFileRouter.get('/image/:_id', validateObjectId(objectIdValidation), streamImageById )
+publicFileRouter.get('/image/:id', validateObjectId(objectIdValidation), streamImageById )
 
-adminFileRouter.get('/image/:_id', validateObjectId(objectIdValidation), streamImageById )
+adminFileRouter.get('/image/:id', validateObjectId(objectIdValidation), streamImageById )
 
 // Delete image
 adminFileRouter.delete('/image', validateArrayObjectId(objectIdValidation), deleteImages )
