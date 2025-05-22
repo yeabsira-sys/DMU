@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { GridFSBucket } from "mongodb";
 import multer from "multer";
-
-const mongoURI = 'mongodb://localhost:27017/DMUwebdb';
+import dotenv from 'dotenv'
+dotenv.config()
+const mongoURI = process.env.MONGO_URI
 const conn = mongoose.createConnection(mongoURI);
 
 let bucket;
