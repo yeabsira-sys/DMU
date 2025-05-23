@@ -1,8 +1,12 @@
 import express from 'express';
 import { validate } from '../../middlewares/validate.mjs';
-import { presidentSchema } from '../../validations/presidentValidation.mjs';
+import { presidentSchema, editPresidentSchema } from '../../validations/universityDataValidation.mjs';
+import { validateObjectId } from '../../middlewares/validateObjectID.mjs'
+import { objectIdValidation } from '../../validations/objectIdValidation.mjs'
+import { createPresident, getAllPresidents, getPresidentById, updatePresident, deletePresident } from '../../controllers/universityDataController/presidentsController.mjs';
 
-const router = express.Router();
+const adminPresidentRouter = express.Router();
+const publicPresidentRouter = express.Router();
 
 /**
  * @swagger
@@ -33,7 +37,7 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', validate(presidentSchema), createPresident);
+adminPresidentRouter.post('/', validate(presidentSchema), createPresident);
 
 /**
  * @swagger
@@ -51,7 +55,8 @@ router.post('/', validate(presidentSchema), createPresident);
  *               items:
  *                 $ref: '#/components/schemas/Presidents'
  */
-router.get('/', getAllPresidents);
+adminPresidentRouter.get('/', getAllPresidents);
+publicPresidentRouter.get('/', getAllPresidents);
 
 /**
  * @swagger
@@ -76,7 +81,8 @@ router.get('/', getAllPresidents);
  *       404:
  *         description: President not found
  */
-router.get('/:id', getPresidentById);
+adminPresidentRouter.get('/:id', getPresidentById);
+publicPresidentRouter.get('/:id', getPresidentById);
 
 /**
  * @swagger
@@ -96,18 +102,18 @@ router.get('/:id', getPresidentById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Presidents'
+ *             $ref: '#/components/schemas/editPresidents'
  *     responses:
  *       200:
  *         description: President updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Presidents'
+ *               $ref: '#/components/schemas/editPresidents'
  *       404:
  *         description: President not found
  */
-router.patch('/:id', validate(presidentSchema), updatePresident);
+adminPresidentRouter.patch('/:id', validate(editPresidentSchema), updatePresident);
 
 /**
  * @swagger
@@ -128,51 +134,6 @@ router.patch('/:id', validate(presidentSchema), updatePresident);
  *       404:
  *         description: President not found
  */
-router.delete('/:id', deletePresident);
+adminPresidentRouter.delete('/:id', deletePresident);
 
-// Controller stubs
-
-async function createPresident(req, res) {
-  try {
-    res.status(201).json({ message: 'President created', data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getAllPresidents(req, res) {
-  try {
-    res.status(200).json([]);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getPresidentById(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function updatePresident(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'President updated', id, data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function deletePresident(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'President deleted', id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-export default router;
+export {adminPresidentRouter, publicPresidentRouter}

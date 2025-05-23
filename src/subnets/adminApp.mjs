@@ -12,6 +12,8 @@ import { adminCampusLifeRouter } from '../routes/universityData/campusLife.mjs'
 import { adminColledgeRouter } from '../routes/universityData/colledge.mjs'
 import { adminDepartmentRouter } from '../routes/universityData/department.mjs'
 import { adminSubscribRouter } from '../routes/universityData/newsLetterSubscription.mjs'
+import { adminOfficeRouter } from '../routes/universityData/office.mjs'
+import { adminPresidentRouter } from '../routes/universityData/presidents.mjs'
 
 const router = express.Router()
 router.use(verifyJWT)
@@ -27,6 +29,8 @@ router.use('/campusLife', adminCampusLifeRouter)
 router.use('/college', adminColledgeRouter)
 router.use('/department', adminDepartmentRouter)
 router.use('/subscriber', adminSubscribRouter)
+router.use('/offices', adminOfficeRouter)
+router.use('/presidents', adminPresidentRouter)
 
 
 

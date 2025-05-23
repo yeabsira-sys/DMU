@@ -176,7 +176,7 @@ export const editDepartmentSchema = Joi.object({
             name: Joi.string().required(),
             _id: Joi.string().optional(),
           })
-        ).required(),
+        ).optional(),
   imageChanged: Joi.boolean().optional()
 });
 
@@ -188,9 +188,13 @@ export const officeSchema = Joi.object({
   location: Joi.string().allow('', null),
   president: Joi.string().allow('', null),
   msg: Joi.string().allow('', null),
-  phone: Joi.string().pattern(/^[0-9+()\-\s]+$/).allow('', null).messages({
-    'string.pattern.base': 'Phone must contain only digits and symbols like +, -, (, )',
-  }),
+  phone: Joi.string()
+      .pattern(/^(\+251|0)?9\d{8}$/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Phone number must be 10 to 15 digits',
+        'any.required': 'Phone number is required'
+      }),
   email: Joi.string().email().allow('', null),
   pobox: Joi.string().allow('', null),
   isHidden: Joi.boolean(),
@@ -204,9 +208,13 @@ export const editOfficeSchema = Joi.object({
   location: Joi.string().allow('', null),
   president: Joi.string().allow('', null),
   msg: Joi.string().allow('', null),
-  phone: Joi.string().pattern(/^[0-9+()\-\s]+$/).allow('', null).messages({
-    'string.pattern.base': 'Phone must contain only digits and symbols like +, -, (, )',
-  }),
+  phone: Joi.string()
+      .pattern(/^(\+251|0)?9\d{8}$/)
+      .optional()
+      .messages({
+        'string.pattern.base': 'Phone number must be 10 to 15 digits',
+        'any.required': 'Phone number is required'
+      }),
   email: Joi.string().email().allow('', null),
   pobox: Joi.string().allow('', null),
     isHidden: Joi.boolean(),
@@ -218,7 +226,7 @@ export const editOfficeSchema = Joi.object({
             name: Joi.string().required(),
             _id: Joi.string().optional(),
           })
-        ).required(),
+        ).optional(),
   imageChanged: Joi.boolean().optional()
 });
 
@@ -237,7 +245,7 @@ export const editPresidentSchema = Joi.object({
     'any.required': 'Name is required',
     'string.base': 'Name must be a string',
   }),
-  startDate: Joi.date().iso().allow(null).optional(),
+  startDate: Joi.date().iso().required(),
   endDate: Joi.date().iso().allow(null).optional(),
   description: Joi.string().allow('', null),
     isHidden: Joi.boolean(),
@@ -249,7 +257,7 @@ export const editPresidentSchema = Joi.object({
             name: Joi.string().required(),
             _id: Joi.string().optional(),
           })
-        ).required(),
+        ).optional(),
   imageChanged: Joi.boolean().optional()
 });
 
@@ -293,7 +301,7 @@ export const editProgramSchema = Joi.object({
             name: Joi.string().required(),
             _id: Joi.string().optional(),
           })
-        ).required(),
+        ).optional(),
   imageChanged: Joi.boolean().optional()
 });
 
@@ -308,7 +316,13 @@ export const schoolSchema = Joi.object({
   vision: Joi.string().allow('', null),
   location: Joi.string().allow('', null),
   email: Joi.string().email().allow('', null),
-  phone: Joi.string().allow('', null),
+  phone: Joi.string()
+      .pattern(/^(\+251|0)?9\d{8}$/)
+      .optional()
+      .messages({
+        'string.pattern.base': 'Phone number must be 10 to 15 digits',
+        'any.required': 'Phone number is required'
+      }),
     isHidden: Joi.boolean(),
   college: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().messages({
     'any.required': 'College reference is required',
@@ -325,7 +339,13 @@ export const editSchoolSchema = Joi.object({
   vision: Joi.string().allow('', null),
   location: Joi.string().allow('', null),
   email: Joi.string().email().allow('', null),
-  phone: Joi.string().allow('', null),
+  phone: Joi.string()
+      .pattern(/^(\+251|0)?9\d{8}$/)
+      .optional()
+      .messages({
+        'string.pattern.base': 'Phone number must be 10 to 15 digits',
+        'any.required': 'Phone number is required'
+      }),
   college: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().messages({
     'any.required': 'College reference is required',
     'string.pattern.base': 'Invalid college ID format'
@@ -339,7 +359,7 @@ export const editSchoolSchema = Joi.object({
             name: Joi.string().required(),
             _id: Joi.string().optional(),
           })
-        ).required(),
+        ).optional(),
   imageChanged: Joi.boolean().optional()
 });
 
@@ -380,7 +400,7 @@ export const editStatisticsSchema = Joi.object({
             name: Joi.string().required(),
             _id: Joi.string().optional(),
           })
-        ).required(),
+        ).optional(),
   imageChanged: Joi.boolean().optional()
 });
 

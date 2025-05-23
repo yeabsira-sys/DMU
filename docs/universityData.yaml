@@ -329,6 +329,7 @@ components:
         phone: "+251-912-345-678"
         email: registrar@dmu.edu.et
         pobox: "1234"
+        isHidden: false
 
     editOffice:
       type: object
@@ -409,6 +410,7 @@ components:
         startDate: 2019-01-01
         endDate: 2023-01-01
         description: Served as the university's president with distinction.
+        isHidden: false
 
     editPresidents:
       type: object

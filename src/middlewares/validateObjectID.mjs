@@ -1,7 +1,7 @@
 export const validateObjectId = (schema) => {
   return async (req, res, next) => {
     let _id
-    if(req.params._id || req.body._id){
+    if(req.params?._id || req.body?._id){
       _id =  req.params?._id || req.body._id;
     }else{
      _id = req.params?.id || req.body?.id;

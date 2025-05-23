@@ -9,7 +9,8 @@ const presidentSchema = new mongoose.Schema({
   isHidden: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: null },
-  postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
   images: [
       {
       id: {type: mongoose.Schema.Types.ObjectId, ref: 'images.files'},

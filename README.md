@@ -12,3 +12,5 @@ user login anomalities resulted from role based login resolved
 # go to the auditLogger in the middleware direcctory and comment out enqueueAuditLog at line 25
 
 # go to the loginController, passwordChangeController, forgetPasswordController and comment out the emailQueue function call
+
+# make sure to run "git checkout --theirs ." to accpept all the incoming changes
