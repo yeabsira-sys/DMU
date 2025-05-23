@@ -1,8 +1,13 @@
 import express from 'express';
 import { validate } from '../../middlewares/validate.mjs';
-import { departmentSchema } from '../../validations/departmentValidation.mjs';
+import { departmentSchema, editDepartmentSchema } from '../../validations/universityDataValidation.mjs'
+import { validateObjectId } from '../../middlewares/validateObjectID.mjs'
+import { objectIdValidation } from '../../validations/objectIdValidation.mjs'
+import { auditLogger } from '../../middlewares/auditLoger.mjs'
+import { createDepartment, getAllDepartments, getDepartmentById, deleteDepartment, updateDepartment } from '../../controllers/universityDataController/departmentsController.mjs'
 
-const router = express.Router();
+const adminDepartmentRouter = express.Router();
+const publicDeparmentRouter = express.Router();
 
 /**
  * @swagger
@@ -33,7 +38,7 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', validate(departmentSchema), createDepartment);
+adminDepartmentRouter.post('/', auditLogger('creating department'), validate(departmentSchema), createDepartment);
 
 /**
  * @swagger
@@ -51,7 +56,8 @@ router.post('/', validate(departmentSchema), createDepartment);
  *               items:
  *                 $ref: '#/components/schemas/Department'
  */
-router.get('/', getAllDepartments);
+adminDepartmentRouter.get('/', auditLogger('fetching deparements'),  getAllDepartments);
+publicDeparmentRouter.get('/', getAllDepartments);
 
 /**
  * @swagger
@@ -76,7 +82,8 @@ router.get('/', getAllDepartments);
  *       404:
  *         description: Department not found
  */
-router.get('/:id', getDepartmentById);
+adminDepartmentRouter.get('/:id', auditLogger('fetching department by id'), validateObjectId(objectIdValidation),getDepartmentById);
+publicDeparmentRouter.get('/:id', validateObjectId(objectIdValidation),getDepartmentById);
 
 /**
  * @swagger
@@ -107,7 +114,7 @@ router.get('/:id', getDepartmentById);
  *       404:
  *         description: Department not found
  */
-router.patch('/:id', validate(departmentSchema), updateDepartment);
+adminDepartmentRouter.patch('/:id', auditLogger('updating department'), validateObjectId(objectIdValidation), validate(editDepartmentSchema), updateDepartment);
 
 /**
  * @swagger
@@ -128,4 +135,7 @@ router.patch('/:id', validate(departmentSchema), updateDepartment);
  *       404:
  *         description: Department not found
  */
-router.delete('/:id', deleteDepartment);
+adminDepartmentRouter.delete('/:id', auditLogger('deleting department '), validateObjectId(objectIdValidation), deleteDepartment);
+
+
+export { adminDepartmentRouter, publicDeparmentRouter};

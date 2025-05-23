@@ -1,8 +1,13 @@
 import express from 'express';
 import { validate } from '../../middlewares/validate.mjs';
-import { officeSchema } from '../../validations/officeValidation.mjs';
+import { officeSchema, editOfficeSchema } from '../../validations/universityDataValidation.mjs';
+import { createOffice, getAllOffices, getOfficeById, updateOffice, deleteOffice } from '../../controllers/universityDataController/officeController.mjs'
+import { auditLogger } from '../../middlewares/auditLoger.mjs' 
+import { validateObjectId } from '../../middlewares/validateObjectID.mjs'
+import { objectIdValidation } from '../../validations/objectIdValidation.mjs'
 
-const router = express.Router();
+const adminOfficeRouter = express.Router();
+const publicOfficeRouter = express.Router();
 
 /**
  * @swagger
@@ -13,7 +18,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /office:
+ * /offices:
  *   post:
  *     summary: Create a new office
  *     tags: [Office]
@@ -33,11 +38,11 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', validate(officeSchema), createOffice);
+adminOfficeRouter.post('/', auditLogger('creating office'), validate(officeSchema), createOffice);
 
 /**
  * @swagger
- * /office:
+ * /offices:
  *   get:
  *     summary: Get all offices
  *     tags: [Office]
@@ -51,11 +56,11 @@ router.post('/', validate(officeSchema), createOffice);
  *               items:
  *                 $ref: '#/components/schemas/Office'
  */
-router.get('/', getAllOffices);
+adminOfficeRouter.get('/', getAllOffices);
 
 /**
  * @swagger
- * /office/{id}:
+ * /offices/{id}:
  *   get:
  *     summary: Get an office by ID
  *     tags: [Office]
@@ -76,11 +81,11 @@ router.get('/', getAllOffices);
  *       404:
  *         description: Office not found
  */
-router.get('/:id', getOfficeById);
+adminOfficeRouter.get('/:id', getOfficeById);
 
 /**
  * @swagger
- * /office/{id}:
+ * /offices/{id}:
  *   patch:
  *     summary: Update an office
  *     tags: [Office]
@@ -107,11 +112,11 @@ router.get('/:id', getOfficeById);
  *       404:
  *         description: Office not found
  */
-router.patch('/:id', validate(officeSchema), updateOffice);
+adminOfficeRouter.patch('/:id', auditLogger('updating office record'), validate(editOfficeSchema), updateOffice);
 
 /**
  * @swagger
- * /office/{id}:
+ * /offices/{id}:
  *   delete:
  *     summary: Delete an office
  *     tags: [Office]
@@ -128,51 +133,7 @@ router.patch('/:id', validate(officeSchema), updateOffice);
  *       404:
  *         description: Office not found
  */
-router.delete('/:id', deleteOffice);
+adminOfficeRouter.delete('/:id', deleteOffice);
 
-// Controller stubs
 
-async function createOffice(req, res) {
-  try {
-    res.status(201).json({ message: 'Office created', data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getAllOffices(req, res) {
-  try {
-    res.status(200).json([]);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getOfficeById(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function updateOffice(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'Office updated', id, data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function deleteOffice(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'Office deleted', id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-export default router;
+export { adminOfficeRouter, publicOfficeRouter}

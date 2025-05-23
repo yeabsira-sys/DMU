@@ -8,5 +8,6 @@ const objectId = Joi.string().custom((value, helpers) => {
   return value;
 }, 'ObjectId Validation');
   export const objectIdValidation = Joi.object({
-    _id: objectId.required()
-  })
+    _id: objectId,
+    id: objectId
+  }).xor('_id', 'id')
