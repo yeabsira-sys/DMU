@@ -1,9 +1,10 @@
-import { unique } from 'agenda/dist/job/unique'
 import { mongoose } from '../config/db.mjs'
 
 const subscriberSchema = new mongoose.Schema({
     email: {type: String, unique: true},
-    status: { type: String, enum: ['active', 'inactive']}
+    isActive: { type: Boolean, default: true},
+    createdAt: {type: Date, default: Date.now},
+    updatedAt: {type: Date, default: null}
 })
 
-export const Subscriber = new mongoose.model(subscriberSchema)
+export const Subscriber = new mongoose.model('subscriber', subscriberSchema)

@@ -193,7 +193,7 @@ export const filterNewsAdmin = async (req, res) => {
       return res.status(404).json({
         message: `no news to found woth filter ${JSON.stringify(filter)}`,
       });
-    const totalNews = await News.countDocuments({});
+    const totalNews = await News.countDocuments({filter});
     const length = news.length;
     res.status(200).json({
       totalNews,
