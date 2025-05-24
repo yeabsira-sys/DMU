@@ -1,8 +1,13 @@
 import express from 'express';
 import { validate } from '../../middlewares/validate.mjs';
-import { programSchema } from '../../validations/programValidation.mjs';
+import { editProgramSchema, programSchema, programFilterSchema } from '../../validations/universityDataValidation.mjs';
+import { validateObjectId  } from '../../middlewares/validateObjectID.mjs';
+import { objectIdValidation } from '../../validations/objectIdValidation.mjs';
+import { createProgram, getAllPrograms, getProgramById, updateProgram,deleteProgram, searchProgram, filterPrograms  } from '../../controllers/universityDataController/programsController.mjs'
+import { auditLogger } from '../../middlewares/auditLoger.mjs';
 
-const router = express.Router();
+const adminProgramRouter = express.Router();
+const publicProgramRouter = express.Router();
 
 /**
  * @swagger
@@ -33,7 +38,7 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', validate(programSchema), createProgram);
+adminProgramRouter.post('/', auditLogger('creating programs'), validate(programSchema), createProgram);
 
 /**
  * @swagger
@@ -51,7 +56,114 @@ router.post('/', validate(programSchema), createProgram);
  *               items:
  *                 $ref: '#/components/schemas/Programs'
  */
-router.get('/', getAllPrograms);
+adminProgramRouter.get('/', auditLogger('fetching programs'), getAllPrograms);
+publicProgramRouter.get('/', getAllPrograms);
+/**
+ * @swagger
+ * /programs/search:
+ *   get:
+ *     summary: Search programs by name, type, department,for admin and naive users
+ *     tags: [Programs]
+ *     parameters:
+ *       - in: query
+ *         name: searchValue
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Program text search
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: number
+ *         description: Number of items per page
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: number
+ *         description: Page number for pagination
+ *     responses:
+ *       200:
+ *         description: List of programs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Programs'
+ */
+adminProgramRouter.get('/search', auditLogger('fetching programs'), searchProgram);
+publicProgramRouter.get('/search', auditLogger('fetching programs'), searchProgram);
+
+
+/**
+ * @swagger
+ * /programs/filterPrograms:
+ *   get:
+ *     summary: Search programs by name, type, department, isHidden for Admin and CDA only
+ *     tags: [Programs]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Program name
+ *       - in: query
+ *         name: type
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Program type
+ *       - in: query
+ *         name: department
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Program department
+ *       - in: query
+ *         name: isHidden
+ *         required: false
+ *         schema:
+ *           type: boolean
+ *         description: Program isHidden
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer 
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page
+ *       - in: query
+ *         name: sortBy
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Field to sort by
+ *       - in: query
+ *         name: sortOrder
+ *         required: false
+ *         schema:
+ *           type: string
+ *         enum: [asc, desc]
+ *         description: Sort order (ascending or descending)
+ *     responses:
+ *       200:
+ *         description: List of programs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Programs'
+ */
+adminProgramRouter.get('/filterPrograms', auditLogger('fetching programs',), validate(programFilterSchema), filterPrograms);
 
 /**
  * @swagger
@@ -76,7 +188,8 @@ router.get('/', getAllPrograms);
  *       404:
  *         description: Program not found
  */
-router.get('/:id', getProgramById);
+adminProgramRouter.get('/:id', auditLogger('fetching program detail by id'), validateObjectId(objectIdValidation), getProgramById);
+publicProgramRouter.get('/:id', getProgramById);
 
 /**
  * @swagger
@@ -107,7 +220,7 @@ router.get('/:id', getProgramById);
  *       404:
  *         description: Program not found
  */
-router.patch('/:id', validate(programSchema), updateProgram);
+adminProgramRouter.patch('/:id', auditLogger('updating progras'), validateObjectId(objectIdValidation), validate(editProgramSchema), updateProgram);
 
 /**
  * @swagger
@@ -128,51 +241,6 @@ router.patch('/:id', validate(programSchema), updateProgram);
  *       404:
  *         description: Program not found
  */
-router.delete('/:id', deleteProgram);
+adminProgramRouter.delete('/:id', deleteProgram);
 
-// Controller stubs
-
-async function createProgram(req, res) {
-  try {
-    res.status(201).json({ message: 'Program created', data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getAllPrograms(req, res) {
-  try {
-    res.status(200).json([]);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getProgramById(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function updateProgram(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'Program updated', id, data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function deleteProgram(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'Program deleted', id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-export default router;
+export { adminProgramRouter, publicProgramRouter}

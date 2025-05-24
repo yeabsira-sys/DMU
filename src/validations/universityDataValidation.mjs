@@ -268,8 +268,8 @@ export const programSchema = Joi.object({
     'any.required': 'Program name is required',
     'string.base': 'Program name must be a string'
   }),
-  type: Joi.string().valid('BSc', 'MSc', 'PhD').required().messages({
-    'any.only': 'Type must be one of BSc, MSc, or PhD',
+  type: Joi.string().valid('undergraduate', 'postgraduate', 'diploma', 'phd', 'doctorates', 'master', 'bachelor').required().messages({
+    'any.only': 'Type must be one of undergraduate, postgraduate, diploma, phd, doctorates, master, bachelor',
     'any.required': 'Type is required'
   }),
   department: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().messages({
@@ -277,6 +277,24 @@ export const programSchema = Joi.object({
     'string.pattern.base': 'Invalid department ID format'
   }),
     isHidden: Joi.boolean(),
+    description: Joi.string().allow('', null)
+,});
+
+export const programFilterSchema = Joi.object({
+  name: Joi.string().optional().messages({
+    'any.required': 'Program name is required',
+    'string.base': 'Program name must be a string'
+  }),
+  type: Joi.string().optional(),
+  departmentName: Joi.string().optional().messages({
+    'any.required': 'Department name is required',
+    'string.base': 'Department name must be a string'
+  }),
+  isHidden: Joi.boolean().optional(),
+  page: Joi.number().integer().min(1).optional(),
+  limit: Joi.number().integer().min(1).optional(),
+  sortBy: Joi.string().optional(),
+  sortOrder: Joi.string().valid('asc', 'desc').optional()
 });
 
 export const editProgramSchema = Joi.object({
@@ -284,8 +302,8 @@ export const editProgramSchema = Joi.object({
     'any.required': 'Program name is required',
     'string.base': 'Program name must be a string'
   }),
-  type: Joi.string().valid('BSc', 'MSc', 'PhD').optional().messages({
-    'any.only': 'Type must be one of BSc, MSc, or PhD',
+  type: Joi.string().valid('undergraduate', 'postgraduate', 'diploma', 'phd', 'doctorates', 'master', 'bachelor').optional().messages({
+    'any.only': 'Type must be one of undergraduate, postgraduate, diploma, phd, doctorates, master, bachelor',
     'any.required': 'Type is required'
   }),
   department: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().messages({
@@ -293,6 +311,7 @@ export const editProgramSchema = Joi.object({
     'string.pattern.base': 'Invalid department ID format'
   }),
     isHidden: Joi.boolean(),
+    description: Joi.string().allow('', null),
         imageIds: Joi.array().items(Joi.string().optional()),
         formerImages: Joi.array().items(
           Joi.object({
@@ -376,7 +395,8 @@ export const statisticsSchema = Joi.object({
   }),
   status: Joi.string().valid('active', 'inactive').default('active').messages({
     'any.only': 'Status must be either active or inactive'
-  })
+  }),
+  isHidden: Joi.boolean(),
 });
 
 export const editStatisticsSchema = Joi.object({

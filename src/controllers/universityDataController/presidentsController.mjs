@@ -25,11 +25,11 @@ export const createPresident = async (req, res) => {
           else{
             images = []
           }
-          endDate? endDate = null : ''
-          const createdBy = req.user.id
-    const president = {
-        name, description, images, isHidden, startDate, endDate, createdBy
-    }
+          const president = {
+            name, description, images, isHidden, startDate
+          }
+          endDate? president.endDate = endDate : ''
+           president.createdBy = req.user.id
     const newPresident = await Presidents.create(president) 
     if(!newPresident) return res.status(400).json({message: 'president could not created'})
     res.status(201).json({ message: 'president created', data: newPresident });

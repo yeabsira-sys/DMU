@@ -10,6 +10,9 @@ import { publicCampusRouter } from '../routes/universityData/campuses.mjs'
 import { publicColledgeRouter } from '../routes/universityData/colledge.mjs'
 import { publicDeparmentRouter } from '../routes/universityData/department.mjs'
 import { publicSubscribRouter } from '../routes/universityData/newsLetterSubscription.mjs'
+import { publicOfficeRouter } from '../routes/universityData/office.mjs'
+import { publicPresidentRouter } from '../routes/universityData/presidents.mjs'
+import { publicProgramRouter } from '../routes/universityData/programs.mjs'
 const router = express.Router()
 
 router.use('/auth', authenticatonRoutes)
@@ -23,6 +26,8 @@ router.use('/campusLife', publicCampusLifeRouter)
 router.use('/college', publicColledgeRouter)
 router.use('/department', publicDeparmentRouter)
 router.use('/subscription', publicSubscribRouter)
-
+router.use('/offices', publicOfficeRouter)
+router.use('/presidents', publicPresidentRouter)    
+router.use('/programs', publicProgramRouter)
 
 export default router

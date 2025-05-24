@@ -1,8 +1,13 @@
 import express from 'express';
 import { validate } from '../../middlewares/validate.mjs';
-import { schoolSchema } from '../../validations/schoolValidation.mjs';
+import { schoolSchema, editSchoolSchema } from '../../validations/universityDataValidation.mjs';
+import { createSchool, getAllSchools, getSchoolById, updateSchool, deleteSchool } from '../../controllers/universityDataController/schoolController.mjs';
+import { validateObjectId } from '../../middlewares/validateObjectId.mjs';
+import { objectIdValidation } from '../../validations/objectIdValidation.mjs'
+import { auditLogger } from '../../middlewares/auditLoger.mjs';
 
-const router = express.Router();
+const adminSchoolRouter = express.Router();
+const publicSchoolRout = express.Router();
 
 /**
  * @swagger
@@ -33,7 +38,7 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', validate(schoolSchema), createSchool);
+adminSchoolRouter.post('/', auditLogger('creating school'), validate(schoolSchema), createSchool);
 
 /**
  * @swagger
@@ -51,7 +56,8 @@ router.post('/', validate(schoolSchema), createSchool);
  *               items:
  *                 $ref: '#/components/schemas/Schools'
  */
-router.get('/', getAllSchools);
+publicSchoolRout.get('/', getAllSchools);
+adminSchoolRouter.get('/', auditLogger('fetching all schools'), getAllSchools);
 
 /**
  * @swagger
@@ -76,7 +82,8 @@ router.get('/', getAllSchools);
  *       404:
  *         description: School not found
  */
-router.get('/:id', getSchoolById);
+adminSchoolRouter.get('/:id', auditLogger('fetching single school by id'), validateObjectId(objectIdValidation), getSchoolById);
+publicSchoolRout.get('/:id', validateObjectId(objectIdValidation), getSchoolById);
 
 /**
  * @swagger
@@ -96,18 +103,18 @@ router.get('/:id', getSchoolById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Schools'
+ *             $ref: '#/components/schemas/editSchools'
  *     responses:
  *       200:
  *         description: School updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Schools'
+ *               $ref: '#/components/schemas/editSchools'
  *       404:
  *         description: School not found
  */
-router.patch('/:id', validate(schoolSchema), updateSchool);
+adminSchoolRouter.patch('/:id', auditLogger('updating schools'), validateObjectId(objectIdValidation), validate(editSchoolSchema), updateSchool);
 
 /**
  * @swagger
@@ -128,51 +135,6 @@ router.patch('/:id', validate(schoolSchema), updateSchool);
  *       404:
  *         description: School not found
  */
-router.delete('/:id', deleteSchool);
+adminSchoolRouter.delete('/:id', auditLogger('deleting school record'), validateObjectId(objectIdValidation), deleteSchool);
 
-// Controller stubs
-
-async function createSchool(req, res) {
-  try {
-    res.status(201).json({ message: 'School created', data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getAllSchools(req, res) {
-  try {
-    res.status(200).json([]);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getSchoolById(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function updateSchool(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'School updated', id, data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function deleteSchool(req, res) {
-  try {
-    const { id } = req.params;
-    res.status(200).json({ message: 'School deleted', id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-export default router;
+export { adminSchoolRouter, publicSchoolRout };

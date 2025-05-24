@@ -1,8 +1,18 @@
 import express from 'express';
 import { validate } from '../../middlewares/validate.mjs';
-import { statisticsSchema } from '../../validations/statisticsValidation.mjs'; // Your Joi schema here
+import { statisticsSchema, editStatisticsSchema } from '../../validations/universityDataValidation.mjs';
+import {
+  createStatistic,
+  getAllStatistics,
+  getStatisticById,
+  updateStatistic,
+  deleteStatistic,
+} from '../../controllers/universityDataController/statisticsController.mjs';
+import { auditLogger } from '../../middlewares/auditLoger.mjs';
+import { objectIdValidation } from '../../validations/objectIdValidation.mjs';
 
-const router = express.Router();
+const adminStatisticsRouter = express.Router();
+const publicStatisticsRouter = express.Router();
 
 /**
  * @swagger
@@ -33,7 +43,7 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', validate(statisticsSchema), createStatistic);
+adminStatisticsRouter.post('/', validate(statisticsSchema), createStatistic);
 
 /**
  * @swagger
@@ -51,7 +61,7 @@ router.post('/', validate(statisticsSchema), createStatistic);
  *               items:
  *                 $ref: '#/components/schemas/Statistics'
  */
-router.get('/', getAllStatistics);
+adminStatisticsRouter.get('/', getAllStatistics);
 
 /**
  * @swagger
@@ -76,7 +86,7 @@ router.get('/', getAllStatistics);
  *       404:
  *         description: Statistic not found
  */
-router.get('/:id', getStatisticById);
+adminStatisticsRouter.get('/:id', getStatisticById);
 
 /**
  * @swagger
@@ -107,7 +117,7 @@ router.get('/:id', getStatisticById);
  *       404:
  *         description: Statistic not found
  */
-router.patch('/:id', validate(statisticsSchema), updateStatistic);
+adminStatisticsRouter.patch('/:id', validate(statisticsSchema), updateStatistic);
 
 /**
  * @swagger
@@ -128,57 +138,7 @@ router.patch('/:id', validate(statisticsSchema), updateStatistic);
  *       404:
  *         description: Statistic not found
  */
-router.delete('/:id', deleteStatistic);
+adminStatisticsRouter.delete('/:id', deleteStatistic);
 
 
-// Controller stubs
-
-async function createStatistic(req, res) {
-  try {
-    // Implement creation logic here
-    res.status(201).json({ message: 'Statistic created', data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getAllStatistics(req, res) {
-  try {
-    // Implement fetch all logic here
-    res.status(200).json([]); // Replace [] with actual data
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function getStatisticById(req, res) {
-  try {
-    const { id } = req.params;
-    // Implement fetch by id logic here
-    res.status(200).json({ id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function updateStatistic(req, res) {
-  try {
-    const { id } = req.params;
-    // Implement update logic here
-    res.status(200).json({ message: 'Statistic updated', id, data: req.body });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function deleteStatistic(req, res) {
-  try {
-    const { id } = req.params;
-    // Implement delete logic here
-    res.status(200).json({ message: 'Statistic deleted', id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-export default router;
+export { adminStatisticsRouter, publicStatisticsRouter };

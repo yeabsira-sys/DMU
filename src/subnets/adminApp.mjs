@@ -14,6 +14,9 @@ import { adminDepartmentRouter } from '../routes/universityData/department.mjs'
 import { adminSubscribRouter } from '../routes/universityData/newsLetterSubscription.mjs'
 import { adminOfficeRouter } from '../routes/universityData/office.mjs'
 import { adminPresidentRouter } from '../routes/universityData/presidents.mjs'
+import { adminProgramRouter } from '../routes/universityData/programs.mjs'
+import { adminSchoolRouter } from '../routes/universityData/schools.mjs'
+import { adminStatisticsRouter } from '../routes/universityData/statistics.mjs'
 
 const router = express.Router()
 router.use(verifyJWT)
@@ -31,6 +34,9 @@ router.use('/department', adminDepartmentRouter)
 router.use('/subscriber', adminSubscribRouter)
 router.use('/offices', adminOfficeRouter)
 router.use('/presidents', adminPresidentRouter)
+router.use('/programs', adminProgramRouter)
+router.use('/schools', adminSchoolRouter)
+router.use('/statistics', adminStatisticsRouter)
 
 
 

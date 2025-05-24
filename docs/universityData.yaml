@@ -462,13 +462,14 @@ components:
         - name
         - type
         - department
+        - description
       properties:
         name:
           type: string
           description: Name of the academic program
         type:
           type: string
-          enum: [BSc, MSc, PhD]
+          enum: [undergraduate, postgraduate, diploma, phd, doctorates, master, bachelor]
           description: Type of the program (e.g., BSc, MSc, or PhD)
         department:
           type: string
@@ -476,21 +477,27 @@ components:
         isHidden:
           type: boolean
           example: false
+        description: 
+          type: string
+          description: Description of the program
+      example:
+        name: bachelor of Science in computer Science
+        type: phd
+        department: 60d21b4667d0d8992e610c85
+        description: a program that focuses on the stude of compute Science
+        isHidden: false
+
 
     editPrograms:
       type: object
-      required:
-        - name
-        - type
-        - department
       properties:
         name:
           type: string
           description: Name of the academic program
         type:
           type: string
-          enum: [BSc, MSc, PhD]
-          description: Type of the program (e.g., BSc, MSc, or PhD)
+          enum: [undergraduate, postgraduate, diploma, phd, doctorates, master, bachelor]
+          description: Type of the program (e.g.undergraduate,  postgraduate,diploma, phd ,doctorate, master, bachelor 'for now')
         department:
           type: string
           description: ID of the department the program belongs to
@@ -517,7 +524,23 @@ components:
                 type: string
               _id:
                 type: string
-    # ===================== School =====================
+      example:
+        name: bachelor of Science in computer Science
+        type: BSc
+        department: 60d21b4667d0d8992e610c85
+        description: a program that focuses on the stude of compute Science
+        isHidden: false
+        imageChanged: true
+        imageIds:
+          - 6633ab3a7a06b9627cd2b4b1
+        formerImages:
+          - id: 6633ab3a7a06b9627cd2b4b1
+            uri: /uploads/colleges/image1.jpg
+            name: image1.jpg
+            _id: 6633ab3a7a06b9627cd2btte
+
+        
+            # ===================== School =====================
     Schools:
       type: object
       required:
