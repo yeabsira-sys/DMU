@@ -17,6 +17,8 @@ import { adminPresidentRouter } from '../routes/universityData/presidents.mjs'
 import { adminProgramRouter } from '../routes/universityData/programs.mjs'
 import { adminSchoolRouter } from '../routes/universityData/schools.mjs'
 import { adminStatisticsRouter } from '../routes/universityData/statistics.mjs'
+import { adminJobRouter } from '../routes/jops/jopsRoutes.mjs'
+import { adminEventRouter } from '../routes/events/eventRoutes.mjs'
 
 const router = express.Router()
 router.use(verifyJWT)
@@ -37,6 +39,8 @@ router.use('/presidents', adminPresidentRouter)
 router.use('/programs', adminProgramRouter)
 router.use('/schools', adminSchoolRouter)
 router.use('/statistics', adminStatisticsRouter)
+router.use('/jobs', adminJobRouter)
+router.use('/events', adminEventRouter)
 
 
 

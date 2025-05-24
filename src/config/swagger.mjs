@@ -6,6 +6,7 @@ const componentsDoc = yaml.load(fs.readFileSync('./docs/swagger.yaml', 'utf-8'))
 const newsComponents = yaml.load(fs.readFileSync('./docs/newsSchema.yaml', 'utf-8'))
 const admissionComponents = yaml.load(fs.readFileSync('./docs/admission.yaml', 'utf-8'))
 const universityData = yaml.load(fs.readFileSync('./docs/universityData.yaml', 'utf-8'))
+const jops = yaml.load(fs.readFileSync('./docs/jopsSchema.yaml', 'utf-8'))
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -33,6 +34,7 @@ const options = {
     ...newsComponents.components.schemas,
     ...admissionComponents.components.schemas,
     ...universityData.components.schemas,
+    ...jops.components.schemas,
   },
 },
 security: [

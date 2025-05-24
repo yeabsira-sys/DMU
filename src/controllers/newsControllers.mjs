@@ -16,6 +16,7 @@ const __dirname = path.dirname(__filename)
 export const newsPostController = async (req, res, next) => {
   if(!req.user.role == 'cda') return res.status(403).json({message: 'forbidden'})
   try {
+
     let newsData = (({
       title,
       content,
@@ -36,9 +37,17 @@ export const newsPostController = async (req, res, next) => {
       strong,
     }))(req.body);
 
-    const imageData = await fs.readFile("imagefile.json", "utf-8");
-    const images = await JSON.parse(imageData);
-    await fs.unlink("imagefile.json")
+      const imageFilePath = path.join("imagefile.json")
+        let images
+                console.log(imageFilePath)
+              if( await fileExists(imageFilePath)){
+                const imageData = await fs.readFile('imagefile.json', 'utf8')
+                images = JSON.parse(imageData);
+                await fs.unlink(imageFilePath);
+              }
+              else{
+                images = []
+              }
     const postedBy = req.user.id || "";
     newsData = {
       ...newsData,

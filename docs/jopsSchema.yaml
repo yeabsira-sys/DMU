@@ -1,0 +1,252 @@
+components:
+  schemas:
+    JobResponse:
+      type: object
+      properties:
+
+        title:
+          type: string
+          example: "Software Engineer"
+        department:
+          type: string
+          example: "IT"
+        jobType:
+          type: string
+          enum: [Full-time, Part-time, Contract, Temporary]
+          example: "Full-time"
+        jobLevel:
+          type: string
+          example: "Senior"
+        description:
+          type: string
+          example: "Responsible for developing and maintaining web applications."
+        requiredQualifications:
+          type: string
+          example: "Bachelor's degree in Computer Science"
+        preferredQualifications:
+          type: string
+          example: "Experience with Node.js and MongoDB"
+        experienceRequired:
+          type: string
+          example: "3+ years"
+        applicationDeadline:
+          type: string
+          format: date
+          example: "2024-07-31"
+        postingDate:
+          type: string
+          format: date
+          example: "2024-06-01"
+        salaryRange:
+          type: string
+          example: "$50,000 - $70,000"
+        location:
+          type: string
+          example: "New York"
+        applicationProcess:
+          type: string
+          example: "Submit your resume and cover letter online."
+        applicationLink:
+          type: string
+          example: "https://company.com/jobs/apply"
+        documentsRequired:
+          type: array
+          items:
+            type: string
+          example: ["Resume", "Cover Letter"]
+        contactEmail:
+          type: string
+          example: "hr@company.com"
+        jobReferenceCode:
+          type: string
+          example: "JOB2024-001"
+        equalOpportunityStatement:
+          type: string
+          example: "We are an equal opportunity employer."
+        isHidden:
+          type: boolean
+          example: false
+    CreateJob:
+      allOf:
+        - $ref: '#/components/schemas/JobResponse'
+      required:
+        - title
+        - department
+        - jobType
+        - applicationDeadline
+    EditJob:
+      allOf:
+        - $ref: '#/components/schemas/JobResponse'
+    SearchJobQuery:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Engineer"
+        department:
+          type: string
+          example: "IT"
+        jobType:
+          type: string
+          enum: [Full-time, Part-time, Contract, Temporary]
+          example: "Full-time"
+        jobLevel:
+          type: string
+          example: "Senior"
+        isHidden:
+          type: boolean
+          example: false
+        fromDate:
+          type: string
+          format: date
+          example: "2024-06-01"
+        toDate:
+          type: string
+          format: date
+          example: "2024-07-01"
+        limit:
+          type: integer
+          example: 10
+        page:
+          type: integer
+          example: 1
+
+    EventResponse:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Annual Tech Conference"
+        eventType:
+          type: string
+          enum: [Seminar, Workshop, Conference, Cultural, Sports, Other]
+          example: "Conference"
+        description:
+          type: string
+          example: "A gathering of tech enthusiasts and professionals."
+        organizer:
+          type: string
+          example: "Tech Department"
+        startDateTime:
+          type: string
+          format: date-time
+          example: "2024-08-15T09:00:00Z"
+        endDateTime:
+          type: string
+          format: date-time
+          example: "2024-08-15T17:00:00Z"
+        location:
+          type: string
+          example: "Main Auditorium"
+        registrationRequired:
+          type: boolean
+          example: true
+        registrationLink:
+          type: string
+          example: "https://university.com/events/register"
+        audience:
+          type: string
+          example: "Students, Faculty, Public"
+        speakers:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "Jane Doe"
+              bio:
+                type: string
+                example: "CTO at TechCorp"
+              affiliation:
+                type: string
+                example: "TechCorp"
+        agenda:
+          type: string
+          example: "09:00 Opening, 10:00 Keynote, 12:00 Lunch, 14:00 Workshops"
+        contactInfo:
+          type: string
+          example: "events@university.com"
+        category:
+          type: string
+          example: "Technology"
+        status:
+          type: string
+          enum: [Upcoming, Ongoing, Completed]
+          example: "Upcoming"
+        recurrence:
+          type: string
+          example: "Annual"
+        isHidden:
+          type: boolean
+          example: false
+    CreateEvent:
+      allOf:
+        - $ref: '#/components/schemas/EventResponse'
+      required:
+        - title
+        - eventType
+        - startDateTime
+    EditEvent:
+      type: object
+      properties:
+        eventImages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              uri:
+                type: string
+              name:
+                type: string
+              _id:
+                type: string
+        imageChanged:
+          type: boolean
+          example: true
+        imageIds:
+          type: array
+          items:
+            type: string
+      allOf:
+        - $ref: '#/components/schemas/EventResponse'
+    SearchEventQuery:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Conference"
+        eventType:
+          type: string
+          enum: [Seminar, Workshop, Conference, Cultural, Sports, Other]
+          example: "Conference"
+        organizer:
+          type: string
+          example: "Tech Department"
+        category:
+          type: string
+          example: "Technology"
+        status:
+          type: string
+          enum: [Upcoming, Ongoing, Completed]
+          example: "Upcoming"
+        location:
+          type: string
+          example: "Main Auditorium"
+        fromDate:
+          type: string
+          format: date
+          example: "2024-08-01"
+        toDate:
+          type: string
+          format: date
+          example: "2024-08-31"
+        limit:
+          type: integer
+          example: 10
+        page:
+          type: integer
+          example: 1
+      

@@ -18,15 +18,23 @@ const EventSchema = new mongoose.Schema({
       affiliation: String
     }
   ],
-  eventImageUrl: { type: String },
+  eventImages: [
+    {
+    id: {type: mongoose.Schema.Types.ObjectId, ref: 'images.files'},
+    uri: {type: String, required: true},
+    name: {type: String, required: true}
+  }],
   agenda: { type: String },
   contactInfo: { type: String },
   category: { type: String },
   status: { type: String, enum: ['Upcoming', 'Ongoing', 'Completed'], default: 'Upcoming' },
-  recurrence: { type: String }, // e.g., "Weekly", "Monthly", "One-time"
-  tags: [String],
+  recurrence: { type: String }, 
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: null },
+  isDeleted: { type: Boolean, default: false },
+  isHidden: { type: Boolean, default: false },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 export const Event = mongoose.model('Event', EventSchema);

@@ -20,7 +20,11 @@ const JobOpeningSchema = new mongoose.Schema({
   jobReferenceCode: { type: String },
   equalOpportunityStatement: { type: String },
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
+  isHidden: {type: Boolean, default: false},
+  isDeleted: {type: Boolean, default: false},
+  createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  updatedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
-export const Jop = mongoose.model('JobOpening', JobOpeningSchema);
+export const JobOpening = mongoose.model('JobOpening', JobOpeningSchema);
