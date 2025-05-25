@@ -185,7 +185,7 @@ adminJobRouter.delete("/:id", auditLogger('deleting jop posts'), validateObjectI
 
 /**
  * @swagger
- * /jobs/admin/hidden:
+ * /jobs/hidden:
  *   get:
  *     tags:
  *       - Jobs
@@ -213,7 +213,7 @@ adminJobRouter.delete("/:id", auditLogger('deleting jop posts'), validateObjectI
  *                 $ref: '#/components/schemas/JobResponse'
  */
 adminJobRouter.get(
-  "/admin/hidden",
+  "/hidden",
   auditLogger("fetching hidden jobs"),
   getHiddenJobs
 );

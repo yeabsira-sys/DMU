@@ -58,6 +58,7 @@ adminFileRouter.post('/news/image', upload.array('images'),  validateImageData(i
 
 // get image by id
 publicFileRouter.get('/image/:id', validateObjectId(objectIdValidation), streamImageById )
+adminFileRouter.get('/image/:id', validateObjectId(objectIdValidation), streamImageById )
 
 adminFileRouter.get('/image/:id', validateObjectId(objectIdValidation), streamImageById )
 

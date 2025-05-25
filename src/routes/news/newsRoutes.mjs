@@ -9,7 +9,6 @@ import { newsPostController, filterNews, filterNewsAdmin, getNewsById, updateNew
 import { validateNewsSearch } from "../../middlewares/validateNewsSearch.mjs";
 import { validateObjectId } from "../../middlewares/validateObjectID.mjs";
 import { objectIdValidation } from "../../validations/objectIdValidation.mjs";
-import { verifyAdminOrCDA } from "../../middlewares/verifyForAdminOrCDA.mjs";
 import { auditLogger } from "../../middlewares/auditLoger.mjs";
 
 const adminNewsRouter = express.Router();

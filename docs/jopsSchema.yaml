@@ -249,4 +249,91 @@ components:
         page:
           type: integer
           example: 1
-      
+
+
+    AnnouncementResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "665f1e2b8f1b2c0012a3b456"
+        title:
+          type: string
+          example: "Admission Open for Fall 2024"
+        type:
+          type: string
+          enum: [admission, event, jobopening]
+          example: "admission"
+        description:
+          type: string
+          example: "Admissions are now open for the Fall 2024 semester."
+        department:
+          type: string
+          example: "Admissions Office"
+        targetAudience:
+          type: array
+          items:
+            type: string
+          example: ["students", "public"]
+        startDate:
+          type: string
+          format: date
+          example: "2024-08-01"
+        endDate:
+          type: string
+          format: date
+          example: "2024-09-01"
+        applicationLink:
+          type: string
+          example: "https://university.com/admissions/apply"
+        location:
+          type: string
+          example: "Main Campus"
+        contactInfo:
+          type: string
+          example: "admissions@university.com"
+        attachments:
+          type: array
+          items:
+            type: string
+          example: ["https://university.com/files/brochure.pdf"]
+        postedBy:
+          type: string
+          example: "665f1e2b8f1b2c0012a3b123"
+        relatedId:
+          type: string
+          example: "665f1e2b8f1b2c0012a3b789"
+        status:
+          type: string
+          enum: [published, draft, archived]
+          example: "published"
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["admission", "fall2024"]
+        isHidden:
+          type: boolean
+          example: false
+        isDeleted:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+          example: "665f1e2b8f1b2c0012a3b123"
+    CreateAnnouncement:
+      allOf:
+        - $ref: '#/components/schemas/AnnouncementResponse'
+      required:
+        - title
+        - type
+        - description
+    UpdateAnnouncement:
+      allOf:
+        - $ref: '#/components/schemas/AnnouncementResponse'     

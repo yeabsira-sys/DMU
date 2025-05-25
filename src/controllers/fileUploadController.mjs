@@ -17,7 +17,7 @@ export const uploadFile = async (req, res, next) => {
       const readableStream = Readable.from(file.buffer);
       const uploadStream = bucket.openUploadStream(file.originalname, {
         metadata: {
-          uploadedBy: req.user?.userName || 'anonymose',
+          uploadedBy: req.user?.id || 'anonymose',
           caption: captionsArray[i]? captionsArray[i] : captionsArray[0],
           title: title || '',
           content: content || ''

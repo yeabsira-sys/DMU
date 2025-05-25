@@ -13,6 +13,8 @@ import { publicSubscribRouter } from '../routes/universityData/newsLetterSubscri
 import { publicOfficeRouter } from '../routes/universityData/office.mjs'
 import { publicPresidentRouter } from '../routes/universityData/presidents.mjs'
 import { publicProgramRouter } from '../routes/universityData/programs.mjs'
+import { publicStudentsFileRouter } from '../routes/fileRoute/studentsFile.mjs'
+
 const router = express.Router()
 
 router.use('/auth', authenticatonRoutes)
@@ -29,5 +31,6 @@ router.use('/subscription', publicSubscribRouter)
 router.use('/offices', publicOfficeRouter)
 router.use('/presidents', publicPresidentRouter)    
 router.use('/programs', publicProgramRouter)
+router.use('/studentsinfo', publicStudentsFileRouter)
 
 export default router

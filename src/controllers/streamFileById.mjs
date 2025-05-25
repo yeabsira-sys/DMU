@@ -1,6 +1,6 @@
 import { conn, bucket } from '../config/fileStream.mjs'
 import {ObjectId} from 'mongodb'
-export const streamImageById = async (req, res) => {
+export const streamFileById = async (req, res) => {
   try {
     const id = req.params.id
     const filesCollection = conn.db.collection('images.files');
@@ -10,7 +10,8 @@ export const streamImageById = async (req, res) => {
       return res.status(404).json({ error: 'File not found' });
     }
 
-    res.setHeader('Content-Type', file.contentType || 'application/octet-stream')
+    res.setHeader('Content-Type', file.contentType || 'application/octet-stream');
+     res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
 
     const downloadStream = bucket.openDownloadStream(new ObjectId(id));
     downloadStream.on('error', () =>{
