@@ -20,6 +20,12 @@ export const createEventValidationSchema = Joi.object({
   createdAt: Joi.date(),
   editedAt: Joi.date().allow(null),
   editedBy: objectId.allow(null),
+  socialMediaPosted: Joi.array()
+      .items(Joi.string().valid('facebook', 'telegram'))
+      .messages({
+        'any.only': '{{#label}} must be either facebook or telegram',
+        'array.includes': '{{#label}} contains invalid platform'
+      }),
 });
 
 export const updateEventValidationSchema = Joi.object({

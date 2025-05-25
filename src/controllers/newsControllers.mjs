@@ -10,6 +10,9 @@ import { changeMetadata } from "../services/changeFileMetaData.mjs";
 import { ObjectId } from "mongodb";
 import { removeMatchIds } from "../services/removeMatchIds.mjs";
 import { verifyAdminOrCDA } from "../middlewares/verifyForAdminOrCDA.mjs";
+import axios from "axios";
+// import  url  from "inspector";
+// import { body } from "express-validator";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -56,6 +59,22 @@ export const newsPostController = async (req, res, next) => {
     };
     try {
   const news = await News.create(newsData);
+      if(!news) return res.status(400).json({message: 'news could not be posted'})
+        axios.post(
+        'http://localhost:4040/new-content-to-post',
+        {
+          title: 'news',
+          content: news
+        }
+      );
+      // axios.post(
+      //  { url:'http://localhost/4040/new-content-to-post',
+      //   body: {
+      //     title: 'news',
+      //     content: 'some content relevant for the bot serve to process data'
+      //   }
+      
+   // })
   return res.status(201).json({ payload: news });
 } catch (error) {
   const imageIds = images.map((image) => image.id);

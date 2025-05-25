@@ -20,6 +20,12 @@ export const createJobValidationSchema = Joi.object({
   jobReferenceCode: Joi.string().max(100).optional(),
   equalOpportunityStatement: Joi.string().max(1000).optional(),
   isHidden: Joi.boolean().optional(),
+  socialMediaPosted: Joi.array()
+    .items(Joi.string().valid('facebook', 'telegram'))
+    .messages({
+      'any.only': '{{#label}} must be either facebook or telegram',
+      'array.includes': '{{#label}} contains invalid platform'
+    }),
 });
 
 export const editJobValidationSchema = createJobValidationSchema.fork(

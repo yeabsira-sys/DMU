@@ -32,6 +32,7 @@ export const createEvent = async (req, res) => {
       category,
       status,
       recurrence,
+      socialMediaPosted = [],
     } = req.body;
     const createdBy = req.user?.id;
     const eventData = {
@@ -52,6 +53,7 @@ export const createEvent = async (req, res) => {
       status,
       recurrence,
       createdBy,
+      socialMediaPosted,
     };
 
     const imageFilePath = path.join("imagefile.json");

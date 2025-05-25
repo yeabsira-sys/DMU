@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 // CREATE
 export const createJob = async (req, res) => {
   try {
-    const { title, department, jobType, jobLevel, requiredQualifications, preferredQualifications, experienceRequired , applicationDeadline, postingDate, salaryRange, location, applicationProcess, applicationLink, documentsRequired, contactEmail, jobReferenceCode,equalOpportunityStatement, isHidden} = req.body;
+    const { title, department, jobType, jobLevel, requiredQualifications, preferredQualifications, experienceRequired , applicationDeadline, postingDate, salaryRange, location, applicationProcess, applicationLink, documentsRequired, contactEmail, jobReferenceCode,equalOpportunityStatement, isHidden, socialMediaPosted} = req.body;
     const createdBy = req.user?.id;
     const jopsData = {
         title,
@@ -26,7 +26,7 @@ export const createJob = async (req, res) => {
         equalOpportunityStatement,
         isHidden,
         createdBy,
-
+        socialMediaPosted: socialMediaPosted || []
     }
     const job = await JobOpening.create({
       ...jopsData,

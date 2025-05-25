@@ -28,6 +28,7 @@ components:
         contactInfo: { type: string }
         campusLocation: { type: string }
         programCode: { type: string }
+        socialMediaPosted: { type: array, items: { type: string, enum: [telegram, facebook] } }
         requiredDocuments:
           type: array
           items:

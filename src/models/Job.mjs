@@ -24,7 +24,12 @@ const JobOpeningSchema = new mongoose.Schema({
   isHidden: {type: Boolean, default: false},
   isDeleted: {type: Boolean, default: false},
   createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-  updatedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+  updatedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  socialMediaPosted: {
+    type: [String], 
+    enum: ['facebook', 'telegram'],
+    default: []
+  }
 });
 
 export const JobOpening = mongoose.model('JobOpening', JobOpeningSchema);

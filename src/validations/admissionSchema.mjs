@@ -63,4 +63,10 @@ export const editAdmissionSchema = Joi.object({
         })
       ).required(),
     imageChanged: Joi.boolean().required(),
+    socialMediaPosted: Joi.array()
+        .items(Joi.string().valid('facebook', 'telegram'))
+        .messages({
+          'any.only': '{{#label}} must be either facebook or telegram',
+          'array.includes': '{{#label}} contains invalid platform'
+        }),
 });

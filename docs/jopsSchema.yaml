@@ -66,6 +66,11 @@ components:
         isHidden:
           type: boolean
           example: false
+        socialMediaPosted:
+          type: array
+          items:
+            type: string
+            enum: [facebook, telegram]
     CreateJob:
       allOf:
         - $ref: '#/components/schemas/JobResponse'
@@ -141,6 +146,11 @@ components:
         registrationRequired:
           type: boolean
           example: true
+        socialMediaPosted:
+          type: array
+          items:
+            type: string
+            enum: [facebook, telegram]
         registrationLink:
           type: string
           example: "https://university.com/events/register"
@@ -254,15 +264,12 @@ components:
     AnnouncementResponse:
       type: object
       properties:
-        _id:
-          type: string
-          example: "665f1e2b8f1b2c0012a3b456"
         title:
           type: string
           example: "Admission Open for Fall 2024"
         type:
           type: string
-          enum: [admission, event, jobopening]
+          enum: [admission, event, jobopening, other]
           example: "admission"
         description:
           type: string
@@ -274,7 +281,7 @@ components:
           type: array
           items:
             type: string
-          example: ["students", "public"]
+          example: ["students", "public", "faculty", "staff"]
         startDate:
           type: string
           format: date
@@ -297,9 +304,6 @@ components:
           items:
             type: string
           example: ["https://university.com/files/brochure.pdf"]
-        postedBy:
-          type: string
-          example: "665f1e2b8f1b2c0012a3b123"
         relatedId:
           type: string
           example: "665f1e2b8f1b2c0012a3b789"
@@ -315,18 +319,11 @@ components:
         isHidden:
           type: boolean
           example: false
-        isDeleted:
-          type: boolean
-          example: false
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        updatedBy:
-          type: string
-          example: "665f1e2b8f1b2c0012a3b123"
+        socialMediaPosted:
+          type: array
+          items:
+            type: string
+            enum: [facebook, telegram]
     CreateAnnouncement:
       allOf:
         - $ref: '#/components/schemas/AnnouncementResponse'

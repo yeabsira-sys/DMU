@@ -20,6 +20,7 @@ import { adminStatisticsRouter } from '../routes/universityData/statistics.mjs'
 import { adminJobRouter } from '../routes/jops/jopsRoutes.mjs'
 import { adminEventRouter } from '../routes/events/eventRoutes.mjs'
 import {adminStudentsFileRouter} from '../routes/fileRoute/studentsFile.mjs'
+import { adminAnnouncementRouter } from '../routes/announcements/announcementRoutes.mjs'
 
 const router = express.Router()
 router.use(verifyJWT)
@@ -43,6 +44,7 @@ router.use('/statistics', adminStatisticsRouter)
 router.use('/jobs', adminJobRouter)
 router.use('/events', adminEventRouter)
 router.use('/studentsinfo', adminStudentsFileRouter)
+router.use('/announcements', adminAnnouncementRouter)
 
 
 

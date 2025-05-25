@@ -1,5 +1,5 @@
 import express from "express";
-import { validate } from "../middlewares/validate.mjs";
+import { validate } from "../../middlewares/validate.mjs";
 import {
   createAnnouncement,
   filterAnnouncements,
@@ -9,14 +9,14 @@ import {
   getHiddenAnnouncements,
   getDeletedAnnouncements,
   toggleAnnouncementIsHidden,
-} from "../controllers/announcementController.mjs";
-import { validateObjectId } from "../middlewares/validateObjectID.mjs";
-import { objectIdValidation } from "../validations/objectIdValidation.mjs";
-import { auditLogger } from "../middlewares/auditLoger.mjs";
+} from "../../controllers/announcementController.mjs";
+import { validateObjectId } from "../../middlewares/validateObjectID.mjs";
+import { objectIdValidation } from "../../validations/objectIdValidation.mjs";
+import { auditLogger } from "../../middlewares/auditLoger.mjs";
 import {
   createAnnouncementValidationSchema,
   updateAnnouncementValidationSchema,
-} from "../validations/announcementSchema.mjs";
+} from "../../validations/announcementSchema.mjs";
 
 const adminAnnouncementRouter = express.Router();
 const publicAnnouncementRouter = express.Router();
@@ -27,7 +27,7 @@ const publicAnnouncementRouter = express.Router();
  *   post:
  *     tags:
  *       - Announcements
- *     summary: Create an announcement
+ *     summary: Create an announcement || when you create an announcement, you can specify the type of announcement (admission, event, job opening) and relatedId if applicable.   simplly create a button that says announce in the admission, event, or jop opening page, and when you click it, it will redirect you to the announcement creation page with the type and relatedId pre-filled. or you can create an annouuncement type other
  *     requestBody:
  *       required: true
  *       content:
@@ -240,7 +240,7 @@ adminAnnouncementRouter.delete("/:id", auditLogger("deleting announcement"), val
 /**
  * @swagger
  * /announcements/{id}/toggle-hidden:
- *   patch:
+ *   put:
  *     tags:
  *       - Announcements
  *     summary: Toggle isHidden for an announcement (admin only)
@@ -257,6 +257,6 @@ adminAnnouncementRouter.delete("/:id", auditLogger("deleting announcement"), val
  *       404:
  *         description: Announcement not found
  */
-adminAnnouncementRouter.patch("/:id/toggle-hidden", auditLogger("toggle announcement isHidden"), validateObjectId(objectIdValidation), toggleAnnouncementIsHidden);
+adminAnnouncementRouter.put("/:id/toggle-hidden", auditLogger("toggle announcement isHidden"), validateObjectId(objectIdValidation), toggleAnnouncementIsHidden);
 
 export { adminAnnouncementRouter, publicAnnouncementRouter };

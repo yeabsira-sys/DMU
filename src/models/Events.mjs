@@ -34,7 +34,12 @@ const EventSchema = new mongoose.Schema({
   isDeleted: { type: Boolean, default: false },
   isHidden: { type: Boolean, default: false },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  socialMediaPosted: {
+    type: [String], 
+    enum: ['facebook', 'telegram'],
+    default: []
+  }
 });
 
 export const Event = mongoose.model('Event', EventSchema);
