@@ -19,7 +19,7 @@ export const createProgram = async (req, res) => {
     if(!name) return res.status(400).json({message: 'name is required'})    
     if(!type) return res.status(400).json({message: 'type is required'})
     if(!department) return res.status(400).json({message: 'department is required'})
-        const foundDepartment = await Department.findById({_id: new ObjectId(department)})
+        const foundDepartment = await Department.findById(department)
     if(!foundDepartment) return res.status(404).json({message: `no department found with id ${department}`})
         const departmentName = foundDepartment.name
     const program = {
@@ -63,10 +63,11 @@ export const updateProgram = async (req, res) => {
     let departmentFound
     
         if(department && ObjectId.isValid(department)){
-            departmentFound = await Department.findById({_id: new ObjectId(department)})
-        if(!departmentFound) return res.status(404).json({message: 'no deartments could be found pleas enter valide department id'})}
+            departmentFound = await Department.findById(department)
+            console.log(departmentFound)
+        if(!departmentFound) return res.status(404).json({message: `no departments could be found please enter valide department id${department}`})}
         else{
-        return res.status(400).json({message: 'deparment must be valide objectId '})
+        return res.status(400).json({message: 'department must be valid objectId '})
         }
 
 

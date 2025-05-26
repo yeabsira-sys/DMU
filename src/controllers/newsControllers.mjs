@@ -60,11 +60,17 @@ export const newsPostController = async (req, res, next) => {
     try {
   const news = await News.create(newsData);
       if(!news) return res.status(400).json({message: 'news could not be posted'})
+        const  posterImage = images.map(image => image.uri)
+
         axios.post(
         'http://localhost:4040/new-content-to-post',
         {
-          title: 'news',
-          content: news
+          title: news.title,
+          description: news.detail,
+          postTo: news.socialMediaPosted,
+          tags: ['DMU', 'News', 'University', 'Addis_Ababa_university', 'Ethiopia'],
+          link: `http://localhost:3500/news/${news._id}`,
+          IMAGES: posterImage,
         }
       );
   return res.status(201).json({ payload: news });
@@ -339,10 +345,10 @@ export const updateNews = async (req, res) => {
  
       // console.log(images);
      
-    } else if (imageNames) {
+    } else if (imageNames && imageNames.length > 0 ){
       const changes = await changeMetadata(imageNames);
       console.log(changes)
-      if (changes.acknowledged == true) {
+      if (changes?.acknowledged == true) {
         for (let i = 0; i < imageNames.length; i++) {
           for (let j = 0; j < formerImages.length; j++) {
             if (imageNames[i].id == formerImages[j].id) {

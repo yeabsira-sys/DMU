@@ -13,6 +13,8 @@ import { auditLogger } from "../../middlewares/auditLoger.mjs";
 
 const adminStudentsFileRouter = express.Router();
 const publicStudentsFileRouter = express.Router();
+const adminDownload = express.Router()
+const publicDownload = express.Router()
 
 
 /**
@@ -123,11 +125,11 @@ publicStudentsFileRouter.get('/file', fetchStudentInfoMetaData)
  *         description: File not found
  */
 
-adminStudentsFileRouter.get("/file/download/:id",
+adminDownload.get("/file/download/:id",
     auditLogger('downloading students file'), 
      validateObjectId(objectIdValidation), 
 streamFileById);
-publicStudentsFileRouter.get("/file/download/:id", validateObjectId(objectIdValidation), 
+publicDownload.get("/file/download/:id", validateObjectId(objectIdValidation), 
 streamFileById);
 
-export { adminStudentsFileRouter, publicStudentsFileRouter };
+export { adminStudentsFileRouter, publicStudentsFileRouter, adminDownload, publicDownload };

@@ -10,7 +10,7 @@ const announcementSchema = new mongoose.Schema({
   department: { type: String },
   targetAudience: { type: [String], default: ['public'] },
   startDate: { type: Date },
-  endDate: { type: Date },
+  endDate: { type: Date, default: null },
   applicationLink: { type: String },
   location: { type: String },
   contactInfo: { type: String },

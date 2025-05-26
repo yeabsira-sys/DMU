@@ -268,9 +268,20 @@ export const programSchema = Joi.object({
     'any.required': 'Program name is required',
     'string.base': 'Program name must be a string'
   }),
-  type: Joi.array().items(Joi.string().valid('undergraduate', 'postgraduate', 'diploma', 'phd', 'doctorate', 'master', 'bachelor').required().messages({
-    'any.only': 'Type must be one of undergraduate, postgraduate, diploma, phd, doctorates, master, bachelor',
-    'any.required': 'Type is required'})),
+  type: Joi.array()
+  .items(
+    Joi.string()
+      .valid('undergraduate', 'postgraduate', 'diploma', 'phd', 'doctorate', 'master', 'bachelor')
+      .messages({
+        'any.only': 'Each type must be one of: undergraduate, postgraduate, diploma, phd, doctorate, master, bachelor',
+        'string.base': 'Each type must be a string',
+      })
+  )
+  .required()
+  .messages({
+    'array.base': 'Types must be an array',
+    'any.required': 'Types field is required',
+  }),
   department: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().messages({
     'any.required': 'Department reference is required',
     'string.pattern.base': 'Invalid department ID format'
@@ -301,9 +312,19 @@ export const editProgramSchema = Joi.object({
     'any.required': 'Program name is required',
     'string.base': 'Program name must be a string'
   }),
-  type: Joi.string().valid('undergraduate', 'postgraduate', 'diploma', 'phd', 'doctorates', 'master', 'bachelor').optional().messages({
-    'any.only': 'Type must be one of undergraduate, postgraduate, diploma, phd, doctorates, master, bachelor',
-    'any.required': 'Type is required'
+  type: Joi.array()
+  .items(
+    Joi.string()
+      .valid('undergraduate', 'postgraduate', 'diploma', 'phd', 'doctorate', 'master', 'bachelor')
+      .messages({
+        'any.only': 'Each type must be one of: undergraduate, postgraduate, diploma, phd, doctorate, master, bachelor',
+        'string.base': 'Each type must be a string',
+      })
+  )
+  .required()
+  .messages({
+    'array.base': 'Types must be an array',
+    'any.required': 'Types field is required',
   }),
   department: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().messages({
     'any.required': 'Department reference is required',
