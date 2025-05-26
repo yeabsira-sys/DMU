@@ -4,8 +4,8 @@
   "main": "index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "startdev": "nodemon ./index.mjs",
-    "start": "node ./index.mjs"
+    "startdev": "nodemon index.mjs",
+    "start": "node index.mjs"
   },
   "keywords": [],
   "author": "",

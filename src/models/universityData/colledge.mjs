@@ -2,7 +2,7 @@ import { mongoose } from "../../config/db.mjs";
 
 const collegeSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  desc: { type: String },
+  description: { type: String },
   location: { type: String },
   campus: { type: mongoose.Schema.Types.ObjectId, ref: 'Campus' },
   isHidden: { type: Boolean, default: false },

@@ -67,14 +67,6 @@ export const newsPostController = async (req, res, next) => {
           content: news
         }
       );
-      // axios.post(
-      //  { url:'http://localhost/4040/new-content-to-post',
-      //   body: {
-      //     title: 'news',
-      //     content: 'some content relevant for the bot serve to process data'
-      //   }
-      
-   // })
   return res.status(201).json({ payload: news });
 } catch (error) {
   const imageIds = images.map((image) => image.id);

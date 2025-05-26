@@ -2,7 +2,7 @@ import { mongoose } from "../../config/db.mjs";
 
 const departmentSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  descreption: { type: String },
+  description: { type: String },
   school: { type: mongoose.Schema.Types.ObjectId },
   isHidden: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },

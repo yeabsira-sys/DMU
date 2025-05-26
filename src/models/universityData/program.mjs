@@ -2,7 +2,7 @@ import { mongoose } from "../../config/db.mjs";
 
 const programSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  type: {type: String,  enum: ['undergraduate','postgraduate','diploma','phd','doctorate','master','bachelor',]},
+  type: {type: [String], enum: ['undergraduate','postgraduate','diploma','phd','doctorate','master','bachelor',] },
   department: { type: mongoose.Schema.Types.ObjectId, ref: 'department' },
 isHidden: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
