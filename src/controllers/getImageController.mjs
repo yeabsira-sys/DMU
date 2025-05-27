@@ -9,9 +9,9 @@ export const streamImageById = async (req, res) => {
     if (!file) {
       return res.status(404).json({ error: 'File not found' });
     }
-
-    res.setHeader('Content-Type', file.contentType || 'application/octet-stream')
-
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'image/jpeg')
+    console.log(file.contentType, 'content type')
     const downloadStream = bucket.openDownloadStream(new ObjectId(id));
     downloadStream.on('error', () =>{
         console.log("error piping")

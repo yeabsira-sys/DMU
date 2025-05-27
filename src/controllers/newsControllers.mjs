@@ -11,8 +11,7 @@ import { ObjectId } from "mongodb";
 import { removeMatchIds } from "../services/removeMatchIds.mjs";
 import { verifyAdminOrCDA } from "../middlewares/verifyForAdminOrCDA.mjs";
 import axios from "axios";
-// import  url  from "inspector";
-// import { body } from "express-validator";
+import { queueBatchEmails } from "../queues/emailJob.mjs";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -61,18 +60,29 @@ export const newsPostController = async (req, res, next) => {
   const news = await News.create(newsData);
       if(!news) return res.status(400).json({message: 'news could not be posted'})
         const  posterImage = images.map(image => image.uri)
-
-        axios.post(
-        'http://localhost:4040/new-content-to-post',
+        console.log(posterImage)
+        try {
+                  axios.post(
+        'http://localhost:4080/new-content-to-post',
         {
           title: news.title,
           description: news.detail,
           postTo: news.socialMediaPosted,
           tags: ['DMU', 'News', 'University', 'Addis_Ababa_university', 'Ethiopia'],
-          link: `http://localhost:3500/news/${news._id}`,
-          IMAGES: posterImage,
+          link: `http://localhost:3500`,
+          images: posterImage,
         }
       );
+        } catch (error) {
+          console.error('TELEGRAM POST ERROR : ',error)
+        }
+        try {
+          const subject = `${news.title} `
+          const html = `<h3> ${news.description} </h3>`
+         await queueBatchEmails({subject, html})
+        } catch (error) {
+          console.error('MASS EMAILER ERROR : ', error)
+        }
   return res.status(201).json({ payload: news });
 } catch (error) {
   const imageIds = images.map((image) => image.id);

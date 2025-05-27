@@ -13,7 +13,12 @@ import { publicSubscribRouter } from '../routes/universityData/newsLetterSubscri
 import { publicOfficeRouter } from '../routes/universityData/office.mjs'
 import { publicPresidentRouter } from '../routes/universityData/presidents.mjs'
 import { publicProgramRouter } from '../routes/universityData/programs.mjs'
-import { publicStudentsFileRouter, publicDownload } from '../routes/fileRoute/studentsFile.mjs'
+import { publicSchoolRout } from '../routes/universityData/schools.mjs'
+import { publicStatisticsRouter } from '../routes/universityData/statistics.mjs'
+import { publicJobRouter } from '../routes/jops/jopsRoutes.mjs'
+import { publicEventRouter } from '../routes/events/eventRoutes.mjs'
+import {publicDownload, publicStudentsFileRouter} from '../routes/fileRoute/studentsFile.mjs'
+import { publicAnnouncementRouter } from '../routes/announcements/announcementRoutes.mjs'
 
 const router = express.Router()
 
@@ -31,6 +36,11 @@ router.use('/subscription', publicSubscribRouter)
 router.use('/offices', publicOfficeRouter)
 router.use('/presidents', publicPresidentRouter)    
 router.use('/programs', publicProgramRouter)
+router.use('/schools', publicSchoolRout)
+router.use('/statistics', publicStatisticsRouter)
+router.use('/jobs', publicJobRouter)
+router.use('/events', publicEventRouter)
+router.use('/announcements', publicAnnouncementRouter)
 router.use('/studentsinfo', publicStudentsFileRouter)
 router.use('/', publicDownload)
 

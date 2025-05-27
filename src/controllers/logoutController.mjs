@@ -17,6 +17,7 @@ console.log(logoutUser)
 
     if(logoutUser?.refreshToken) return res.sendStatus(500)
 
+      // res.clearCookie()
     res.sendStatus(200);
 
     

@@ -62,6 +62,7 @@ adminStatisticsRouter.post('/', validate(statisticsSchema), createStatistic);
  *                 $ref: '#/components/schemas/Statistics'
  */
 adminStatisticsRouter.get('/', getAllStatistics);
+publicStatisticsRouter.get('/', getAllStatistics);
 
 /**
  * @swagger
@@ -87,6 +88,7 @@ adminStatisticsRouter.get('/', getAllStatistics);
  *         description: Statistic not found
  */
 adminStatisticsRouter.get('/:id', getStatisticById);
+publicStatisticsRouter.get('/:id', getStatisticById);
 
 /**
  * @swagger
