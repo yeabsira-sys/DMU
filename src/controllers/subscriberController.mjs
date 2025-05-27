@@ -1,5 +1,5 @@
 import { Subscriber } from '../models/subscriber.mjs'
-
+import { queueEmail } from '../queues/emailJob.mjs'
 
 export const createSubscriber = async (req, res) => {
 try {
@@ -10,6 +10,16 @@ try {
 
     const subscrib = await Subscriber.create({email})
     if(!subscrib) return res.status(400).json({message: 'could not subscrib'})
+        const emailData = {
+            to: email,
+            subject: 'you have been successfully subscribed at DMU',
+            html: `<p> thanks for your subscription at debre markos university\n  from now on you will get notifications and updates  </p>`
+    }
+    try {
+        await queueEmail(emailData)
+    } catch (error) {
+        console.error('ERROR SENDING SUBSCRIPTION SUCCESS : ', error)
+    }
     return res.status(201).json({message: subscrib})
 } catch (error) {
     return res.status(500).json(error)
