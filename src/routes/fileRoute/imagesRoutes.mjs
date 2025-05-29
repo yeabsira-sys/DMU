@@ -8,6 +8,7 @@ import { objectIdValidation } from '../../validations/objectIdValidation.mjs';
 import { streamImageById } from '../../controllers/getImageController.mjs';
 import { deleteImages } from '../../controllers/deleteFileController.mjs'
 import { validateArrayObjectId } from '../../middlewares/validateArrayObjectId.mjs';
+import { conn } from '../../config/fileStream.mjs';
 
 const adminFileRouter = express.Router()
 const publicFileRouter = express.Router()
@@ -60,8 +61,26 @@ adminFileRouter.post('/news/image', upload.array('images'),  validateImageData(i
 publicFileRouter.get('/image/:id', validateObjectId(objectIdValidation), streamImageById )
 adminFileRouter.get('/image/:id', validateObjectId(objectIdValidation), streamImageById )
 
-adminFileRouter.get('/image/:id', validateObjectId(objectIdValidation), streamImageById )
 
 // Delete image
 adminFileRouter.delete('/image', validateArrayObjectId(objectIdValidation), deleteImages )
 export  {adminFileRouter, publicFileRouter};
+
+
+publicFileRouter.head('/image/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const file = await conn.db.collection('images.files').findOne({ _id: new ObjectId(id) });
+    if (!file) return res.sendStatus(404);
+
+    res.setHeader('Content-Type', file.contentType || 'image/jpeg');
+    res.setHeader('Content-Length', file.length);
+    res.setHeader('Content-Disposition', `inline; filename="${file.filename}"`);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    console.log('first')
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});

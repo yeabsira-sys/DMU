@@ -12,6 +12,7 @@ const studentsInfoSchema = new mongoose.Schema({
             type: { type: String }, 
         }
     ] },
+    data: {type: Object}
 })
 
 export const StudentsInfo = mongoose.model('StudentsInfo', studentsInfoSchema);

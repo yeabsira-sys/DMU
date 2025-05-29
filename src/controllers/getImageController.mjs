@@ -10,8 +10,12 @@ export const streamImageById = async (req, res) => {
       return res.status(404).json({ error: 'File not found' });
     }
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Content-Type', 'image/jpeg')
+    res.setHeader('Content-Type', file.contentType || 'application/octet-stream');
+    res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year
+res.setHeader('Content-Disposition', `inline; filename="${file.filename}"`);
+
     console.log(file.contentType, 'content type')
+    console.log('header for debug',req.headers)
     const downloadStream = bucket.openDownloadStream(new ObjectId(id));
     downloadStream.on('error', () =>{
         console.log("error piping")

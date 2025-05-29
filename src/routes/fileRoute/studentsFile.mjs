@@ -43,6 +43,10 @@ const publicDownload = express.Router()
  *                 items:
  *                   type: string
  *                   format: binary
+ *               data: 
+ *                  type: object
+ *                  items: 
+ *                    type: object
  *     responses:
  *       201:
  *         description: Student info uploaded successfully

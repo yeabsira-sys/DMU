@@ -1,4 +1,3 @@
-import { unique } from "agenda/dist/job/unique";
 import { mongoose } from "../config/db.mjs";
 
 const googleUserSchema = mongoose.Schema({
@@ -7,3 +6,5 @@ const googleUserSchema = mongoose.Schema({
     accessToken: {type: String},
     refreshToken: {type: String},
 })
+
+export const GoogleUser = mongoose.model('googleUsers', googleUserSchema)

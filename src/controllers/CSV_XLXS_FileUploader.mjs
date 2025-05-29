@@ -27,6 +27,7 @@ const extractDataFromBuffer = (buffer, mimetype) => {
 export const uploadAndExtractFile = async (req, res, next) => {
   try {
     const files = req.files;
+    const data = req?.data;
     const fileRefs = [];
     const extractedData = [];
     // console.log(JSON.stringify(files, null, 2));

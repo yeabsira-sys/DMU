@@ -31,10 +31,11 @@ export const uploadFile = async (req, res, next) => {
             imageRefs.push(
               {
                id: uploadStream.id,
-               uri: `http://localhost:${process.env.PORT}/file/image/` + uploadStream.id,
+               uri: `http://localhost:${process.env.PORT}/file/image/${uploadStream.id}`,
                name: file.originalname
               }
             );
+            // .${file.originalname.split('.').pop()}
             resolve();
           });
       });

@@ -21,9 +21,21 @@ import { adminJobRouter } from '../routes/jops/jopsRoutes.mjs'
 import { adminEventRouter } from '../routes/events/eventRoutes.mjs'
 import {adminStudentsFileRouter, adminDownload} from '../routes/fileRoute/studentsFile.mjs'
 import { adminAnnouncementRouter } from '../routes/announcements/announcementRoutes.mjs'
+import session from 'express-session'
+import passport from 'passport'
+import googleAuth from '../google/googleAuth.mjs'
+import googleRoutes from  '../routes/googleRoutes.mjs'
 
+(async () => await import('../google/passport.mjs'))
 
 const router = express.Router()
+
+
+router.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
+router.use(passport.initialize());
+router.use(passport.session());
+
+
 router.use(verifyJWT)
 router.use(verifyAdmin)
 router.use('/auth/changepassword', changePassword)
@@ -47,6 +59,11 @@ router.use('/events', adminEventRouter)
 router.use('/studentsinfo', adminStudentsFileRouter)
 router.use('/', adminDownload)
 router.use('/announcements', adminAnnouncementRouter)
+
+
+
+router.use('/googleAuth', googleAuth);
+router.use('/google', googleRoutes);
 
 
 

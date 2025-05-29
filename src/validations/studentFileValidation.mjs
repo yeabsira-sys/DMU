@@ -5,4 +5,5 @@ export const studentsInfoValidationSchema = Joi.object({
   description: Joi.string().allow(''),
   date: Joi.date().optional(),
   file: Joi.array().items( Joi.string()).min(1).required(),
+  data: Joi.object().optional()
 });
