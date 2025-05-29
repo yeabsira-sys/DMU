@@ -60,7 +60,6 @@ export const newsPostController = async (req, res, next) => {
   const news = await News.create(newsData);
       if(!news) return res.status(400).json({message: 'news could not be posted'})
         const  posterImage = images.map(image => image.uri)
-        console.log(posterImage)
         try {
                   axios.post(
         'http://localhost:4080/new-content-to-post',

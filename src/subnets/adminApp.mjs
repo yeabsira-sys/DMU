@@ -23,10 +23,10 @@ import {adminStudentsFileRouter, adminDownload} from '../routes/fileRoute/studen
 import { adminAnnouncementRouter } from '../routes/announcements/announcementRoutes.mjs'
 import session from 'express-session'
 import passport from 'passport'
-import googleAuth from '../google/googleAuth.mjs'
+import googleAuth from '../routes/googleAuth.mjs'
 import googleRoutes from  '../routes/googleRoutes.mjs'
+import '../google/passport.mjs'
 
-(async () => await import('../google/passport.mjs'))
 
 const router = express.Router()
 

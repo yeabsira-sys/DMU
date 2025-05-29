@@ -73,6 +73,29 @@ export const createEvent = async (req, res) => {
       isDeleted: false,
       eventImages,
     });
+     const  posterImage = event.map(image => image?.uri)
+        try {
+                  axios.post(
+        'http://localhost:4080/new-content-to-post',
+        {
+          title: event.title,
+          description: event.description,
+          postTo: event.socialMediaPosted,
+          tags: ['DMU_EVENTS', 'News', 'University', 'Addis_Ababa_university', 'Ethiopia'],
+          link: `http://localhost:3500/`,
+          images: posterImage? posterImage : [],
+        }
+      );
+        } catch (error) {
+          console.error('TELEGRAM POST ERROR : ',error)
+        }
+        try {
+          const subject = `${event.title} `
+          const html = `<h3> ${event.description} </h3>`
+         await queueBatchEmails({subject, html})
+        } catch (error) {
+          console.error('MASS EMAILER ERROR : ', error)
+        }
     res.status(201).json({ success: true, payload: event });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });

@@ -1,6 +1,6 @@
 import express from "express";
 import { getAuditLogs } from "../controllers/auditlogController.mjs";
-
+import { exportAuditlogs } from "../controllers/auditlogController.mjs";
 const auditLogRouter = express.Router();
 
 /**
@@ -86,4 +86,21 @@ const auditLogRouter = express.Router();
  */
 auditLogRouter.get("/", getAuditLogs);
 
+
+/**
+ * @swagger
+ * /auditlogs/export/excel:
+ *   get:
+ *     summary: Export admissions to CSV or Excel
+ *     tags: [AuditLogs]
+ *     responses:
+ *       200:
+ *         description: Exported file
+ *         content:
+ *           application/octet-stream:
+ *             schema:
+ *               type: string
+ *               format: binary
+ */
+auditLogRouter.get('/export/excel',exportAuditlogs);
 export { auditLogRouter };

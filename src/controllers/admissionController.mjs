@@ -33,8 +33,6 @@ let admissionData = {
   applicationLink, contactInfo, campusLocation, programCode,
   requiredDocuments, faq, isActive
 };
-        
-
    const imageFilePath = path.join("imagefile.json")
         let images
       if( await fileExists(imageFilePath)){            const imageData = await fs.readFile("imagefile.json", "utf-8");
@@ -51,8 +49,31 @@ let admissionData = {
           postedBy,
         };
         try {
-          console.log(admissionData)
       const admission = await Admission.create(admissionData);
+      if(!admission) return res.status(400).json({message: 'admission program could not be created'})
+         const  posterImage = admission.map(images => images.uri)
+        try {
+                  axios.post(
+        'http://localhost:4080/new-content-to-post',
+        {
+          title: admission.name,
+          description: admission.description,
+          postTo: admission?.socialMediaPosted || [],
+          tags: ['DMU', 'News', 'University', 'Addis_Ababa_university', 'Ethiopia'],
+          link: `http://localhost:3000`,
+          images: posterImage? posterImage : [],
+        }
+      );
+        } catch (error) {
+          console.error('TELEGRAM POST ERROR : ',error)
+        }
+        try {
+          const subject = `${admission.name} `
+          const html = `<h3> ${admission.description} </h3>`
+         await queueBatchEmails({subject, html})
+        } catch (error) {
+          console.error('MASS EMAILER ERROR : ', error)
+        }
       return res.status(201).json({ payload: admission });
     } catch (error) {
       const imageIds = images.map((image) => image.id);

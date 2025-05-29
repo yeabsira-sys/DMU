@@ -3,6 +3,8 @@ import { Event } from '../models/Events.mjs'
 import { News} from '../models/News.mjs'
 import { Admission } from '../models/Admission.mjs'
 import { JobOpening } from '../models/Job.mjs'
+import axios from "axios";
+import { queueBatchEmails } from "../queues/emailJob.mjs";
 
 import { ObjectId } from "mongodb";
 
@@ -41,7 +43,28 @@ export const createAnnouncement = async (req, res) => {
       isDeleted: false,
     });
     if(!announcement) return res.status(400).json({ success: false, message: "Announcement creation failed" });  
-    
+        try {
+                  axios.post(
+        'http://localhost:4080/new-content-to-post',
+        {
+          title: announcement.title,
+          description: announcement.description,
+          postTo: announcement.socialMediaPosted,
+          tags: ['DMU', 'News', 'University', 'Addis_Ababa_university', 'Ethiopia'],
+          link: `http://localhost:3500/announcement`,
+          images: []
+        }
+      );
+        } catch (error) {
+          console.error('TELEGRAM POST ERROR : ',error)
+        }
+        try {
+          const subject = `${announcement.title} `
+          const html = `<h4> ${announcement.description} </h4>`
+         await queueBatchEmails({subject, html})
+        } catch (error) {
+          console.error('MASS EMAILER ERROR : ', error)
+        }
     res.status(201).json({ success: true, payload: announcement });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });

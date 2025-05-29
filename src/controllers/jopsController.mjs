@@ -1,5 +1,6 @@
 import { JobOpening } from "../models/Job.mjs";
 import { ObjectId } from "mongodb";
+import axios from "axios";
 
 // CREATE
 export const createJob = async (req, res) => {
@@ -31,6 +32,21 @@ export const createJob = async (req, res) => {
     const job = await JobOpening.create({
       ...jopsData,
     });
+        try {
+                  axios.post(
+        'http://localhost:4080/new-content-to-post',
+        {
+          title: job.title,
+          description: job.requiredQualifications,
+          postTo: job.socialMediaPosted,
+          tags: ['DMU', 'News', 'University', 'Addis_Ababa_university', 'Ethiopia'],
+          link: `http://localhost:3500/jobs`,
+          images: []
+        }
+      );
+        } catch (error) {
+          console.error('SOCIALMEDIA POST ERROR : ',error)
+        }
     res.status(201).json({ success: true, payload: job });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });

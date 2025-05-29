@@ -10,6 +10,7 @@ import { objectIdValidation } from "../../validations/objectIdValidation.mjs";
 import { streamFileById } from "../../controllers/streamFileById.mjs";
 import { fetchStudentInfoMetaData } from "../../controllers/fetchStudentsInfoMetaData.mjs";
 import { auditLogger } from "../../middlewares/auditLoger.mjs";
+import {ObjectId } from 'mongodb'
 
 const adminStudentsFileRouter = express.Router();
 const publicStudentsFileRouter = express.Router();
@@ -108,7 +109,7 @@ publicStudentsFileRouter.get('/file', fetchStudentInfoMetaData)
  *   get:
  *     tags:
  *       - StudentsInfo
- *     summary: Download a CSV file by ID
+ *     summary: Download a CSV, xlsx file by ID
  *     description: Streams a CSV file for download by its file ID.
  *     parameters:
  *       - in: path
@@ -135,5 +136,38 @@ adminDownload.get("/file/download/:id",
 streamFileById);
 publicDownload.get("/file/download/:id", validateObjectId(objectIdValidation), 
 streamFileById);
+
+/**
+ * @swagger
+ * /studentsinfo/file/delete/{id}:
+ *   delete:
+ *     tags:
+ *       - StudentsInfo
+ *     summary: delete students file by ID
+ *     description: delete by its file ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the CSV file to delete
+ *     responses:
+ *       200:
+ *         description: CSV file deleted successfully
+ *       400:
+ *         description: File not deleted
+ */
+adminStudentsFileRouter.delete('/file/delete/:id', auditLogger('deleting user info'), validateObjectId(objectIdValidation), async (req, res) => {
+  const id = req.params?.id
+  const studentsFile = await StudentsInfo.findById({_id: new ObjectId(id)})
+  if(!studentsFile) return res.status(404).json({message:  `there is no students file could be fined with id : ${id}`})
+    const file = studentsFile.file.map(file => file.id)
+    console.log(file)
+  const deleted = await deleteFiles(file)
+  if(!deleted) return res.status(400).json({message: 'file could not be deleted'})
+    await StudentsInfo.findByIdAndDelete({_id: new ObjectId(id)})
+    res.sendStatus(200)
+})
 
 export { adminStudentsFileRouter, publicStudentsFileRouter, adminDownload, publicDownload };

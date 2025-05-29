@@ -19,7 +19,8 @@ export const createSheet = async (req, res) => {
 
   const link = `https://docs.google.com/spreadsheets/d/${fileId}/edit`;
   console.log(link)
- return res.status(201).json({ message: 'Sheet created', link });
+    res.setHeader('Content-Type', 'application/json');
+ return res.status(201).json({ message: 'Sheet created', link: link });
 };
 
 

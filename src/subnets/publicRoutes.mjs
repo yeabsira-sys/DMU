@@ -21,7 +21,7 @@ import {publicDownload, publicStudentsFileRouter} from '../routes/fileRoute/stud
 import { publicAnnouncementRouter } from '../routes/announcements/announcementRoutes.mjs'
 import session from 'express-session'
 import passport from 'passport'
-import googleAuth from '../google/googleAuth.mjs'
+import googleAuth from '../routes/googleAuth.mjs'
 import googleRoutes from  '../routes/googleRoutes.mjs'
 import '../google/passport.mjs'
 // (async () => await import('../config/passport.mjs'))
