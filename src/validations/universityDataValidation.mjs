@@ -181,6 +181,10 @@ export const editDepartmentSchema = Joi.object({
 });
 
 export const officeSchema = Joi.object({
+  type: Joi.string().required().messages({
+    'any.required': 'Office type is required',
+    'string.base': 'Office type must be a string',
+  }),
   name: Joi.string().required().messages({
     'any.required': 'Office name is required',
     'string.base': 'Office name must be a string',
@@ -201,6 +205,10 @@ export const officeSchema = Joi.object({
 
 });
 export const editOfficeSchema = Joi.object({
+  type: Joi.string().optional().messages({
+    'any.required': 'Office type is required',
+    'string.base': 'Office type must be a string',
+  }),
   name: Joi.string().optional().messages({
     'any.required': 'Office name is required',
     'string.base': 'Office name must be a string',

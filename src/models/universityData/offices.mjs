@@ -1,6 +1,7 @@
 import { mongoose } from "../../config/db.mjs";
 
 const officeSchema = new mongoose.Schema({
+  type: { type: String, required: true },
   name: { type: String, required: true },
   location: { type: String },
   president: { type: String },

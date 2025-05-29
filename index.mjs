@@ -17,7 +17,9 @@ async function startServer() {
     await connectDB(); // Connect DB FIRST
     await gridFSReady; // Then wait for GridFS if needed
 
-    app.use(cors());
+    app.use(cors({
+      credentials: true
+    }));
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());

@@ -296,6 +296,10 @@ components:
       required:
         - name
       properties:
+        type:
+          type: string
+          enum: [president, other]
+          description: Name of the office
         name:
           type: string
           description: Name of the office
@@ -322,6 +326,7 @@ components:
           type: boolean
           example: false
       example:
+        type: president
         name: Registrar Office
         location: Main Campus
         president: Dr. John Doe
@@ -336,6 +341,9 @@ components:
       required:
         - name
       properties:
+        type:
+          type: string
+          description: Name of the office
         name:
           type: string
           description: Name of the office

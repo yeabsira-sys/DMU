@@ -5,10 +5,11 @@ export const createOffice = async (req, res) => {
   try {
     if (req.user?.role !== "admin" && req.user?.role !== "cda")
       return res.status(401).json({ message: "un authorize" });
-    const { name, location, president, msg, phone, email, pobox, isHidden } =
+    const { type, name, location, president, msg, phone, email, pobox, isHidden } =
       req.body;
 
     const office = {
+      type,
       name,
       location,
       president,
@@ -63,9 +64,10 @@ export const getOfficeById = async (req, res) => {
 export const updateOffice = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, location, president, msg, phone, email, pobox, isHidden } =
+    const { type, name, location, president, msg, phone, email, pobox, isHidden } =
       req.body;
     let updatedOfficeData = {};
+    type ? (updatedOfficeData.type = type) : "";
     name ? (updatedOfficeData.name = name) : "";
     updatedOfficeData.updatedAt = new Date();
     president ? (updatedOfficeData.president = location) : "";

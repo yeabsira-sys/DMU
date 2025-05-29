@@ -1,6 +1,6 @@
 import express from 'express';
 import { createSheet, createDoc, createCalendarEvent } from '../google/googleController.mjs';
-
+import {verifyGoogleAccessToken} from '../google/verifyGoogleAccessToken.mjs'
 const router = express.Router();
 
 
@@ -28,7 +28,7 @@ const router = express.Router();
  *                   example: https://docs.google.com/spreadsheets/d/{sheetId}/edit
  */
 
-router.post('/create-sheet', createSheet);
+router.post('/create-sheet', verifyGoogleAccessToken, createSheet);
 
 /**
  * @swagger
@@ -54,7 +54,7 @@ router.post('/create-sheet', createSheet);
  *                   example: https://docs.google.com/document/d/{docId}/edit
  */
 
-router.post('/create-doc', createDoc);
+router.post('/create-doc', verifyGoogleAccessToken, createDoc);
 
 /**
  * @swagger
@@ -98,7 +98,7 @@ router.post('/create-doc', createDoc);
  *                   example: https://www.google.com/calendar/event?eid=xxxx
  */
 
-router.post('/create-event', createCalendarEvent);
+router.post('/create-event', verifyGoogleAccessToken, createCalendarEvent);
 
 
 
