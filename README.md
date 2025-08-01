@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # DMU-server
 debre markos universities website server side 
 # dmu server Discription
@@ -14,3 +15,7 @@ user login anomalities resulted from role based login resolved
 # go to the loginController, passwordChangeController, forgetPasswordController and comment out the emailQueue function call
 
 # make sure to run "git checkout --theirs ." to accpept all the incoming changes
+=======
+# DMU
+university website with content management system
+>>>>>>> 03dd889e2e6ac34c6e2505d839b9c6ac601899cb

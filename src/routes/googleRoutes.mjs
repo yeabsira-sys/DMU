@@ -12,6 +12,16 @@ const router = express.Router();
  *     tags: [Google]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: job vacancy form
  *     responses:
  *       200:
  *         description: Google Sheet created and shared publicly
@@ -38,6 +48,16 @@ router.post('/create-sheet', verifyGoogleAccessToken, createSheet);
  *     tags: [Google]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: job vacancy form
  *     responses:
  *       200:
  *         description: Google Doc created and shared publicly
@@ -74,6 +94,9 @@ router.post('/create-doc', verifyGoogleAccessToken, createDoc);
  *               summary:
  *                 type: string
  *                 example: Public Event
+ *               name: 
+ *                 type: string
+ *                 example: event start and end date
  *               start:
  *                 type: string
  *                 format: date-time
